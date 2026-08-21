@@ -549,29 +549,26 @@ pre.code .kw{color:var(--orange2)}
 
   <div class="defBox">
     <div class="term">Gem</div>
-    <p>Google's name for a saved, reusable set of instructions inside the Gemini app — a custom assistant you configure once and then open like a contact. Instructions plus optional reference files. <b>Free on every Gemini plan, including the free tier</b> — no Pro or Ultra needed.</p>
+    <p>Google's name for a saved, reusable set of instructions inside the Gemini app — a custom assistant you configure once and then open like a contact. Instructions, and nothing else: no name field, no file uploads. Everything it knows, you wrote. <b>Free on every Gemini plan, including the free tier</b> — no Pro or Ultra needed.</p>
   </div>
 
   <div class="note pro"><b>Why a Gem replaces the messaging bot:</b> the original version of this class connected the agent to Telegram. We cut it. A bot needs registration with @BotFather, a token, and a fiddly rule about who has to message whom first — and it puts a second app on everyone's phone. A Gem does the same job Advait actually needed (his agent, on his phone, wherever he is) with a Google account he already has. When you see "Telegram" in an agent tutorial, ask what job it's doing. Usually the job is <em>reachability</em>, and there's a cheaper way to get it.</div>
 
   <ol class="verifySteps">
-    <li>Open <code>gemini.google.com</code> on a <b>computer</b> and sign in with a personal Google account. Creating and editing Gems is web-app only — the mobile app can use them but not build them.</li>
-    <li>In the left sidebar, find <b>Explore Gems</b>, then click <b>New Gem</b>. If your sidebar is collapsed, expand it with the ☰ icon first.</li>
-    <li>Give it a name. Ours: <code>Groundwire Desk Editor</code>.</li>
-    <li>Paste the instructions from the panel below into the <b>Instructions</b> box. Read it out loud as you paste — every line in it is doing a job.</li>
-    <li><i>(Optional)</i> Under <b>Knowledge</b>, click <b>Add files</b> and upload a style guide or a couple of past articles. Up to 10 files, 100 MB each. This is what makes it <em>Groundwire's</em> editor rather than a generic one.</li>
-    <li>Click <b>Save</b>. Open it from the sidebar and paste in a rough paragraph to see it work. The Gem now also appears in the Gemini mobile app under the same account.</li>
+    <li>Open <code>gemini.google.com</code> on a <b>computer</b> and sign in with a personal Google account. Building a Gem is web-app only — the mobile app can use what you make but not create it.</li>
+    <li>Click the <b>Settings</b> icon, then <b>Gems</b>. It is not in the left sidebar — this is the step people hunt around for, so point at it slowly.</li>
+    <li><b>There is no name field.</b> Nothing to fill in, nothing to save under a title — so the first line of your instructions is what tells the Gem who it is. Write that line like a job title, because it is doing that job.</li>
+    <li><b>Paste the instructions straight into the prompt box.</b> That box <em>is</em> the instructions box here — you are not chatting with it, you are configuring it. Read the instructions out loud as you paste; every line in them is doing something.</li>
+    <li><b>There is no file upload here either</b> — no Knowledge panel, no attaching a style guide. Everything the Gem knows has to be written into the instructions themselves. That raises the bar on writing them well, and it is why the block below is as specific as it is.</li>
+    <li>Press <b>Enter</b>. Gemini builds the app. Now paste a rough field note into the created app's input box and watch it run.</li>
+    <li>Click <b>Open advanced edition</b> to see the Gem's <b>nodes</b> — the structure Gemini assembled from your plain-English instructions. Worth 60 seconds of everyone's attention: it is the same boxes-and-arrows shape you built by hand in n8n, generated from a paragraph.</li>
   </ol>
 
   <div class="gemPanel">
-    <div class="gpHead">◆ Gem editor — what to type</div>
+    <div class="gpHead">◆ What to paste into the prompt box</div>
     <div class="gpBody">
       <div class="gemField">
-        <span class="gfl">Name</span>
-        <div class="gfBox one">Groundwire Desk Editor</div>
-      </div>
-      <div class="gemField">
-        <span class="gfl">Instructions</span>
+        <span class="gfl">All of it, then Enter</span>
         <div class="gfBox">You are the desk editor for Groundwire, a small digital newsroom.
 
 When I paste rough copy or a field note, do exactly this, in this order:
@@ -585,39 +582,36 @@ Rules you never break:
 - If the note is too thin to write from, say so and ask for the missing piece instead of filling the gap.
 - Keep my wording where it is already good. You are editing, not rewriting for sport.</div>
       </div>
-      <div class="gemField">
-        <span class="gfl">Knowledge <span style="color:var(--ink3)">(optional)</span></span>
-        <div class="gfBox">groundwire-style-guide.pdf · three past published pieces</div>
-      </div>
     </div>
   </div>
 
   <div class="say do">
     <span class="who">🎙 Instructor Does — live, 3 min</span>
-    <p>"Paste this in and let them watch: <em>'Locals say the new pump station near the river has been running since about March and it has apparently already stopped one flood, the council reckons it cost around 4 crore.'</em>"</p>
+    <p>"Once the app exists, paste this into <em>its</em> input box — not back into the prompt box you configured it with. That distinction confuses people the first time, so name it out loud: <em>'Locals say the new pump station near the river has been running since about March and it has apparently already stopped one flood, the council reckons it cost around 4 crore.'</em>"</p>
     <p>"Point at the output. Every single one of those claims comes back NEEDS SOURCE or UNSUPPORTED — <em>because I didn't give it a source for any of them.</em> That's rule 3 doing its job. Then ask the room: which line in the instructions is stopping it from helpfully inventing a council spokesperson? Someone will find it."</p>
+    <p>"Then open the advanced edition and let them look at the nodes for a minute. Ask which node they think rule 3 became. You don't need a right answer — you need them to see that the paragraph they wrote turned into a structure."</p>
   </div>
 
   <div class="grid2">
     <div class="colCard" style="border-color:#5fe08a44">
       <div class="ct" style="color:var(--green)">✓ What the Gem gives you</div>
-      <p>Reusable instructions you configure once. Reference files it reads every time. Works on web, phone, and the Gemini side panel. Free. Ready in ten minutes. Genuinely useful for the 80% case.</p>
+      <p>Reusable instructions you write once and stop re-typing. Works on web and on your phone. Free. Ready in ten minutes. And the advanced view shows you the structure it built, so it isn't a black box. Genuinely useful for the 80% case.</p>
     </div>
     <div class="colCard" style="border-color:#ff6b8b44">
       <div class="ct" style="color:var(--rose)">✗ What it can't do</div>
-      <p>It can't run when you're not there — no timer, no incoming trigger. It can't read or write files on your laptop. Its memory of your conversations isn't a file you own. And it's one agent: it can't hand work to a colleague.</p>
+      <p>It can't run when you're not there — no timer, no incoming trigger. It can't read or write files on your laptop, and you can't hand it one either. Its memory of your conversations isn't a file you own. And it's one agent: it can't hand work to a colleague.</p>
     </div>
   </div>
 
-  <p style="margin-top:18px">That right-hand column is not a criticism of Gems — it's a specification for the next build. <b>Every single one of those four gaps is something the next section closes.</b></p>
+  <p style="margin-top:18px">That right-hand column is not a criticism of Gems — it's a specification for the next build. <b>Every single one of those gaps is something the next section closes</b>, starting with the file one: the very next agent you build can be handed a folder.</p>
 
   <div class="quiz" id="q2">
     <p class="q">Advait wants his Gem to check tips against Groundwire's house style automatically at 6am each day, before he wakes up. What's the honest answer?</p>
     <div class="opt" data-c="0"><span class="ab">A</span><span>Add "run this every morning at 6am" to the Gem's Instructions.</span></div>
-    <div class="opt" data-c="0"><span class="ab">B</span><span>Upload a schedule file under Knowledge and the Gem will follow it.</span></div>
+    <div class="opt" data-c="0"><span class="ab">B</span><span>Write the schedule into the instructions in the advanced edition, where the nodes are.</span></div>
     <div class="opt" data-c="1"><span class="ab">C</span><span>A Gem can't do it — it only runs when a human opens it and types. Scheduling needs something always-on.</span></div>
     <div class="opt" data-c="0"><span class="ab">D</span><span>It works if he leaves the Gemini tab open overnight.</span></div>
-    <div class="quizWhy"><b>Answer: C.</b> A Gem is a saved <em>configuration</em>, not a running process. There is nothing there to wake up. Instructions describe how to respond when someone talks to it — they can't cause it to start talking. This is exactly the personal-vs-always-on distinction from §1, and it's the specific gap the gateway in the next build fills. Option D is the tempting one: an open browser tab feels like something running, but the tab is just a window onto a service that only acts when prompted.</div>
+    <div class="quizWhy"><b>Answer: C.</b> A Gem is a saved <em>configuration</em>, not a running process. There is nothing there to wake up. Instructions describe how to respond when someone talks to it — they can't cause it to start talking. This is exactly the personal-vs-always-on distinction from §1, and it's the specific gap the gateway in the next build fills. Options B and D are the tempting ones. Seeing the nodes in the advanced edition makes a Gem <em>look</em> like a workflow you could schedule &mdash; but those nodes describe what happens once a message arrives, not what makes one arrive. And an open browser tab feels like something running, when the tab is just a window onto a service that only acts when prompted.</div>
   </div>
 </div></section>
 
@@ -1100,9 +1094,9 @@ Do not retry more than twice.</pre>
       <div class="cLabel">Mission</div>
       <p class="mission">Pick a task you repeat — reviewing pull requests, writing standup updates, drafting replies to a certain kind of email. Build a Gem for it, with the same four-part shape as the Desk Editor: what to produce, in what order, what to mark as uncertain, and a hard list of things it must never invent.</p>
       <div class="cLabel">Done when</div>
-      <p class="mission">You've used it three separate times without editing the instructions, and it's on your phone. If you find yourself re-explaining the same thing in every chat, that thing belongs in the Instructions box — go put it there.</p>
+      <p class="mission">You've used it three separate times without editing the instructions, and it's on your phone. If you find yourself re-explaining the same thing in every chat, that thing belongs in the instructions — go put it there.</p>
       <div class="cLabel">Stretch</div>
-      <p class="mission">Add a Knowledge file and find one answer that measurably changed because of it.</p>
+      <p class="mission">Open the advanced edition and read the nodes it generated. Then change one line of your instructions, regenerate, and see which node moved. That mapping — plain English in, structure out — is worth understanding before you build anything bigger.</p>
     </div>
   </div>
 

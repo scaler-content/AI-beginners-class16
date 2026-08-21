@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 16 · Personal Agents &amp; Multi-Agent Systems — Groundwire Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0f14;--bg2:#12161d;--card:#161b24;--card2:#1b212c;--line:#262e3b;--line2:#33405266;
+  --ink:#eef2f7;--ink2:#aab6c6;--ink3:#6d7a8c;
+  --orange:#ff8a2a;--orange2:#ffb066;--orange-dim:#ff8a2a22;
+  --teal:#3dd6c3;--teal-dim:#3dd6c31f;--violet:#a48bff;--violet-dim:#a48bff1f;
+  --gold:#ffd166;--rose:#ff6b8b;--green:#5fe08a;--red:#ff6161;
+  --mono:'JetBrains Mono',monospace;--serif:'Fraunces',serif;--sans:'Manrope',sans-serif;--r:16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+::selection{background:var(--orange);color:#111}
+.wrap{max-width:1020px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.22}
+a{color:var(--orange2)}
+strong{color:var(--ink)}
+em{color:var(--orange2);font-style:normal}
+p{color:var(--ink2)}
+p strong{color:var(--ink)}
+#progressBar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--gold));width:0;z-index:999;transition:width .1s linear}
+.topnav{position:sticky;top:0;background:#0c0f14e8;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);z-index:900}
+.topnav .wrap{display:flex;align-items:center;gap:14px;padding-top:12px;padding-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.topnav .wrap::-webkit-scrollbar{display:none}
+.brand{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--orange);white-space:nowrap}
+.topnav a.nl{font-size:12.5px;font-weight:600;color:var(--ink3);text-decoration:none;white-space:nowrap;padding:5px 10px;border-radius:20px;transition:.2s}
+.topnav a.nl:hover{color:var(--orange);background:var(--orange-dim)}
+.hero{position:relative;padding:88px 0 70px;overflow:hidden;background:radial-gradient(1100px 480px at 78% -12%,#ff8a2a14,transparent 60%),radial-gradient(800px 400px at 8% 110%,#3dd6c30e,transparent 60%)}
+.hero .eyebrow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:500;letter-spacing:.06em;padding:6px 13px;border-radius:100px;border:1px solid var(--line);color:var(--ink2);background:var(--card)}
+.chip.hot{border-color:#ff8a2a55;color:var(--orange2);background:var(--orange-dim)}
+.chip.cool{border-color:#3dd6c355;color:var(--teal);background:var(--teal-dim)}
+.hero h1{font-size:clamp(38px,6vw,64px);font-weight:640;letter-spacing:-.01em;margin-bottom:8px}
+.hero h1 .amp{color:var(--orange);font-style:italic;font-weight:500}
+.hero .sub{font-size:clamp(17px,2.2vw,21px);color:var(--ink2);max-width:740px;margin-top:16px}
+.hero .sub b{color:var(--ink)}
+.heroStats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:44px}
+.hstat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.hstat .n{font-family:var(--serif);font-size:30px;font-weight:640;color:var(--orange)}
+.hstat .l{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+@media(max-width:760px){.heroStats{grid-template-columns:repeat(2,1fr)}}
+.agenda{margin-top:50px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 28px}
+.agenda h3{font-size:14px;font-family:var(--sans);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.agRow{display:flex;align-items:center;flex-wrap:wrap;gap:14px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.agRow:last-child{border-bottom:none}
+.agRow .t{font-family:var(--mono);font-size:12px;color:var(--orange);min-width:86px;font-weight:500}
+.agRow .name{font-weight:600;font-size:15px;color:var(--ink);flex:1;min-width:180px}
+.agRow .tag{margin-left:auto;font-size:11px;font-family:var(--mono);color:var(--ink3);border:1px solid var(--line);padding:3px 10px;border-radius:100px;white-space:nowrap}
+.agRow .tag.simtag{color:var(--teal);border-color:#3dd6c344}
+section.blk{padding:74px 0 30px}
+.secHead{display:flex;align-items:baseline;gap:18px;margin-bottom:8px;flex-wrap:wrap}
+.secNum{font-family:var(--mono);font-size:13px;color:var(--orange);border:1px solid #ff8a2a55;background:var(--orange-dim);padding:5px 13px;border-radius:100px;font-weight:500;white-space:nowrap}
+.secHead h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.01em}
+.secTime{font-family:var(--mono);font-size:12px;color:var(--ink3);margin-left:auto;white-space:nowrap}
+.secLede{font-size:18px;color:var(--ink2);max-width:800px;margin:12px 0 34px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:44px 0 0}
+.say{position:relative;background:linear-gradient(180deg,#1a1410,#161b24);border:1px solid #ff8a2a33;border-left:3px solid var(--orange);border-radius:14px;padding:20px 24px 20px 26px;margin:22px 0}
+.say .who{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:10px}
+.say p{color:#e8dccb;font-size:15.5px;margin-bottom:10px}
+.say p:last-child{margin-bottom:0}
+.say.ask{border-left-color:var(--teal);border-color:#3dd6c333;background:linear-gradient(180deg,#101a19,#161b24)}
+.say.ask .who{color:var(--teal)}
+.say.do{border-left-color:var(--violet);border-color:#a48bff33;background:linear-gradient(180deg,#141021,#161b24)}
+.say.do .who{color:var(--violet)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px 26px;margin:20px 0}
+.card h3{font-size:21px;margin-bottom:10px}
+.card h4{font-size:17px;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+.defBox{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:20px 0;position:relative}
+.defBox::before{content:'DEFINITION';position:absolute;top:-10px;left:20px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);background:var(--bg);padding:2px 10px;border:1px solid #ffd16644;border-radius:100px}
+.defBox .term{font-family:var(--serif);font-size:19px;color:var(--gold);font-weight:600}
+.defBox p{margin-top:6px;font-size:15.5px}
+.useCase{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:.25s;position:relative;overflow:hidden}
+.useCase:hover{border-color:#ff8a2a66;transform:translateY(-3px)}
+.useCase .ico{font-size:26px;margin-bottom:8px}
+.useCase .co{font-family:var(--mono);font-size:11px;color:var(--orange);letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.useCase h4{font-size:16px;margin:4px 0 6px;font-family:var(--sans);font-weight:700}
+.useCase p{font-size:13.5px;color:var(--ink2);line-height:1.55}
+.analogy{display:flex;gap:16px;background:linear-gradient(135deg,#1b1626,#161b24);border:1px solid #a48bff33;border-radius:14px;padding:20px 24px;margin:20px 0}
+.analogy .ic{font-size:30px;line-height:1}
+.analogy .tt{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--violet);font-weight:700;margin-bottom:6px}
+.analogy p{font-size:15px;color:var(--ink2)}
+.analogy p b{color:var(--ink)}
+.note{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;border:1px solid var(--line);background:var(--card2);color:var(--ink2)}
+.note b{color:var(--ink)}
+.note.beg{border-color:#5fe08a44}.note.beg b{color:var(--green)}
+.note.adv{border-color:#ff6b8b44}.note.adv b{color:var(--rose)}
+.note.pro{border-color:#ffd16644}.note.pro b{color:var(--gold)}
+table.tbl{width:100%;border-collapse:collapse;margin:18px 0;font-size:14.5px}
+table.tbl th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);text-align:left;padding:10px 14px;border-bottom:1px solid #ff8a2a44;font-weight:500}
+table.tbl td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+table.tbl tr:hover td{background:#ffffff05}
+table.tbl td:first-child{color:var(--ink);font-weight:600}
+code.k{font-family:var(--mono);font-size:.86em;background:var(--card2);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--orange2)}
+pre.code{font-family:var(--mono);font-size:13px;line-height:1.7;background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:18px 22px;overflow-x:auto;margin:16px 0;color:#c7d2e0}
+pre.code .cm{color:#5b6b7f}
+pre.code .st{color:#8fd8a0}
+pre.code .fn{color:#7cc4ff}
+pre.code .kw{color:var(--orange2)}
+.sim{background:linear-gradient(180deg,#101620,#0e131b);border:1px solid #3dd6c344;border-radius:20px;padding:26px 28px;margin:30px 0;position:relative}
+.sim::before{content:'\26A1 INTERACTIVE SIMULATOR';position:absolute;top:-12px;left:22px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--teal);background:var(--bg);padding:3px 12px;border:1px solid #3dd6c355;border-radius:100px;font-weight:700}
+.sim h3{font-size:20px;margin-bottom:4px}
+.sim .simSub{font-size:14px;color:var(--ink3);margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-weight:700;font-size:13.5px;color:#161009;background:linear-gradient(180deg,var(--orange2),var(--orange));border:none;border-radius:100px;padding:10px 20px;cursor:pointer;transition:.2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px #ff8a2a44}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--orange);color:var(--orange);box-shadow:none}
+.btn.sm{padding:7px 15px;font-size:12.5px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.quiz{background:linear-gradient(180deg,#151021,#12161d);border:1px solid #a48bff44;border-radius:20px;padding:26px 28px;margin:34px 0;position:relative}
+.quiz::before{content:'\2726 CHECKPOINT QUIZ';position:absolute;top:-12px;left:22px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--violet);background:var(--bg);padding:3px 12px;border:1px solid #a48bff55;border-radius:100px;font-weight:700}
+.quiz .q{font-family:var(--serif);font-size:19px;font-weight:600;margin:6px 0 18px;color:var(--ink)}
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 17px;margin:9px 0;cursor:pointer;transition:.2s;font-size:14.5px;color:var(--ink2)}
+.opt:hover{border-color:var(--violet)}
+.opt .ab{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--violet);border:1px solid #a48bff55;border-radius:8px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.correct{border-color:var(--green);background:#5fe08a12;color:var(--ink)}
+.opt.correct .ab{color:var(--green);border-color:var(--green)}
+.opt.wrong{border-color:var(--red);background:#ff616112;opacity:.75}
+.opt.wrong .ab{color:var(--red);border-color:var(--red)}
+.opt.locked{pointer-events:none}
+.quizWhy{display:none;margin-top:16px;border-top:1px dashed #a48bff44;padding-top:16px;font-size:14.5px;color:var(--ink2)}
+.quizWhy.show{display:block;animation:fadeUp .4s ease}
+.quizWhy b{color:var(--violet)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.svgWrap{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:24px 0;overflow-x:auto}
+.svgWrap svg,.svgWrap img{display:block;margin:0 auto;max-width:100%;height:auto;border-radius:10px}
+.svgCap{text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-top:14px;letter-spacing:.04em}
+.bigQuote{font-family:var(--serif);font-size:clamp(21px,3vw,28px);font-weight:500;font-style:italic;color:var(--ink);text-align:center;max-width:780px;margin:50px auto;line-height:1.5}
+.bigQuote em{color:var(--orange);font-style:italic}
+.footer{border-top:1px solid var(--line);margin-top:80px;padding:44px 0 60px;text-align:center}
+.footer p{font-size:13px;color:var(--ink3)}
+.slackDrop{background:linear-gradient(120deg,#12201e,#0f1720);border:1px solid #3dd6c355;border-radius:14px;padding:16px 20px;margin:18px 0;display:flex;gap:14px;align-items:flex-start}
+.slackDrop .av{font-size:26px}
+.slackDrop .nm{font-weight:700;color:var(--teal);font-size:14px}
+.slackDrop .tm{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-left:8px}
+.slackDrop p{font-size:14px;color:var(--ink2);margin-top:4px}
+.msgPills{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+.msgPill{font-family:var(--sans);font-size:12.5px;font-weight:600;text-align:left;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:100px;padding:9px 16px;cursor:pointer;transition:.2s;max-width:100%}
+.msgPill:hover{border-color:var(--teal);color:var(--teal)}
+.msgPill.sel{background:var(--teal-dim);border-color:var(--teal);color:var(--teal)}
+.pickRow{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.pickBtn{font-family:var(--sans);font-weight:700;font-size:12.5px;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:9px;padding:9px 14px;cursor:pointer;transition:.2s;text-align:left}
+.pickBtn:hover{border-color:var(--orange)}
+.pickBtn.on{background:var(--orange-dim);border-color:var(--orange);color:var(--orange2)}
+.pickGroup{margin-bottom:14px}
+.pickGroup .pgl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;display:block}
+.matchBtns{display:flex;flex-wrap:wrap;gap:10px}
+.matchBtn{font-family:var(--sans);font-weight:700;font-size:13px;border:1px solid var(--line);background:#141b26;color:var(--ink2);border-radius:10px;padding:10px 16px;cursor:pointer;transition:.2s;text-align:left}
+.matchBtn:hover{border-color:var(--orange)}
+.matchBtn.right{border-color:var(--green);background:#0f1f1c;color:var(--green)}
+.matchBtn.wrong{border-color:var(--red);background:#221214;color:var(--rose)}
+.matchWhy{margin-top:14px;font-size:14px;color:var(--ink2);min-height:24px}
+.matchWhy b{color:var(--teal)}
+.matchScore{font-family:var(--mono);font-size:12px;color:var(--gold);border:1px solid #ffd16655;background:#ffd16611;border-radius:100px;padding:6px 14px;display:inline-block;margin-top:6px}
+.runLog{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:11.5px;line-height:1.85;color:var(--ink2);min-height:120px;max-height:280px;overflow-y:auto;margin-top:12px}
+.runLog .lg{display:block}
+.runLog .lg.ok{color:var(--green)}.runLog .lg.err{color:var(--rose)}.runLog .lg.warn{color:var(--gold)}.runLog .lg.dim{color:var(--ink3)}
+.verdict{border-radius:12px;padding:14px 18px;margin-top:14px;font-size:14px;border:1px solid var(--line);background:var(--card2);color:var(--ink2)}
+.verdict b{color:var(--ink)}
+.verdict.good{border-color:#5fe08a55;background:#5fe08a0e}.verdict.good b{color:var(--green)}
+.verdict.bad{border-color:#ff616155;background:#ff61610e}.verdict.bad b{color:var(--rose)}
+.verdict.mid{border-color:#ffd16655;background:#ffd1660e}.verdict.mid b{color:var(--gold)}
+.gapCallout{background:#20160f;border:1px solid #ffd16655;border-radius:12px;padding:14px 18px;margin-top:16px;font-size:14px;color:var(--ink2)}
+.gapCallout b{color:var(--gold)}
+.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+@media(max-width:820px){.twoCol{grid-template-columns:1fr}}
+.colCard{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.colCard .ct{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.colCard p{font-size:13.5px}
+.chalCard{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:18px 0;overflow:hidden;transition:.25s}
+.chalCard.open{border-color:#3dd6c366}
+.chalHead{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer}
+.chalHead .cn{font-family:var(--mono);font-size:12px;color:var(--teal);border:1px solid #3dd6c355;border-radius:8px;padding:4px 10px;font-weight:700}
+.chalHead h4{font-family:var(--serif);font-size:19px;flex:1}
+.chalHead .chev{font-family:var(--mono);color:var(--ink3);transition:.3s}
+.chalCard.open .chev{transform:rotate(90deg);color:var(--teal)}
+.chalBody{display:none;padding:0 22px 22px}
+.chalCard.open .chalBody{display:block;animation:fadeUp .4s ease}
+.chalBody .cLabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:16px 0 6px}
+.chalBody .mission{color:var(--ink2);font-size:14.5px}
+/* ---- Class 13 additions — agent-loop visual language (inherited, still used) ---- */
+.canvasStrip{display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.cNode{font-family:var(--sans);font-weight:700;font-size:12px;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px 13px;cursor:pointer;transition:.25s;position:relative;white-space:nowrap}
+.cNode:hover{border-color:var(--orange)}
+.cNode .ci{font-size:14px;margin-right:5px}
+.cNode.sel{border-color:var(--orange);background:var(--orange-dim);color:var(--orange2)}
+.cNode.run{border-color:var(--gold);color:var(--gold);animation:pulse .8s infinite}
+.cNode.ok{border-color:#5fe08a88;color:var(--green);background:#5fe08a10}
+.cNode.err{border-color:var(--red);color:var(--red);background:#ff616112}
+.cNode.skip{opacity:.3}
+.switchRow{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:13px 17px;margin:9px 0}
+.switchRow .swl{font-size:13.5px;color:var(--ink2)}
+.switchRow .swl b{color:var(--ink);display:block;font-size:14.5px;margin-bottom:2px}
+.swBtn{font-family:var(--mono);font-weight:700;font-size:11.5px;letter-spacing:.06em;border:1px solid var(--line);background:#141b26;color:var(--ink3);border-radius:100px;padding:7px 16px;cursor:pointer;transition:.2s;min-width:64px;text-align:center}
+.swBtn.on{border-color:var(--green);background:#5fe08a1a;color:var(--green)}
+.transcriptCard{background:#0f141b;border:1px solid var(--line);border-radius:14px;padding:0;margin-top:16px;overflow:hidden}
+.transcriptCard .th{background:#141b26;border-bottom:1px solid var(--line);padding:10px 16px;font-family:var(--mono);font-size:11px;color:var(--ink3);display:flex;justify-content:space-between}
+.transcriptCard .tb{padding:16px 18px;font-size:13.5px;color:var(--ink2);line-height:1.7;white-space:pre-wrap;min-height:70px}
+.choiceRow{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.choiceBtn{display:flex;gap:12px;align-items:flex-start;text-align:left;background:#141b26;border:1px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;transition:.2s;font-family:var(--sans);font-size:13.5px;color:var(--ink2)}
+.choiceBtn:hover{border-color:var(--orange)}
+.choiceBtn.good{border-color:var(--green);background:#5fe08a12;color:var(--ink)}
+.choiceBtn.bad{border-color:var(--rose);background:#ff6b8b12;color:var(--ink)}
+.choiceBtn .cico{font-size:16px;flex-shrink:0}
+.alarmMeter{background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+.alarmBar{height:16px;border-radius:100px;background:#181f2b;overflow:hidden;margin:12px 0 8px;border:1px solid var(--line)}
+.alarmFill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--green),var(--gold),var(--red));width:0%;transition:width .25s linear}
+.alarmEnds{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.verifyHead{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+.verifySteps{list-style:none;counter-reset:vs;margin:0;padding:0}
+.verifySteps li{counter-increment:vs;position:relative;padding:0 0 0 34px;margin:0 0 12px;font-size:13.5px;color:var(--ink2);line-height:1.6}
+.verifySteps li:last-child{margin-bottom:0}
+.verifySteps li::before{content:counter(vs);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:100px;background:#141b26;border:1px solid var(--line);color:var(--orange2);font-family:var(--mono);font-size:11px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center}
+.verifySteps li b{color:var(--ink)}
+.verifySteps li code{background:#141b26;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12px;color:var(--gold);white-space:nowrap}
+.realGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media(max-width:820px){.realGrid{grid-template-columns:1fr}}
+.realCard{background:linear-gradient(180deg,#1a1113,#161b24);border:1px solid #ff6b8b3a;border-radius:14px;padding:20px 22px}
+.realCard .rtag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--rose);font-weight:700;margin-bottom:10px}
+.realCard h4{font-size:16.5px;margin-bottom:8px;color:var(--ink)}
+.realCard p{font-size:14px;color:var(--ink2);line-height:1.65}
+.realCard p b{color:var(--ink)}
+/* ---- Class 14 additions — tools/memory/MCP visual language (inherited, still used) ---- */
+.trayRow{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.trayBtn{font-family:var(--sans);font-weight:700;font-size:13px;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:12px 18px;cursor:pointer;transition:.2s;flex:1;min-width:140px;text-align:center}
+.trayBtn:hover{border-color:var(--orange)}
+.trayBtn:disabled{opacity:.35;cursor:not-allowed}
+.queueStrip{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0}
+.queueCard{font-family:var(--sans);font-size:13px;font-weight:600;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;transition:.2s;max-width:260px;animation:popIn .3s ease}
+.queueCard:hover{border-color:var(--teal)}
+.queueCard.sel{border-color:var(--orange);background:var(--orange-dim);color:var(--orange2)}
+.ruleList{list-style:none;margin:16px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ruleItem{display:flex;align-items:center;gap:12px;background:#141b26;border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.ruleItem .rn{font-family:var(--mono);font-size:11px;color:var(--ink3);min-width:18px}
+.ruleItem .rl{flex:1;font-size:13.5px;color:var(--ink2)}
+.ruleItem .rl b{color:var(--ink)}
+.ruleArrows{display:flex;flex-direction:column;gap:2px}
+.ruleArrows button{font-family:var(--mono);font-size:11px;background:#0a0d12;color:var(--ink3);border:1px solid var(--line);border-radius:6px;width:24px;height:20px;cursor:pointer}
+.ruleArrows button:hover:not(:disabled){border-color:var(--orange);color:var(--orange)}
+.ruleArrows button:disabled{opacity:.25;cursor:not-allowed}
+.memBank{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:820px){.memBank{grid-template-columns:1fr}}
+.memLane{background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-height:110px}
+.memLane .ml-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.memFact{font-size:12.5px;color:var(--ink2);background:#141b26;border:1px solid var(--line);border-radius:8px;padding:7px 11px;margin-bottom:7px}
+.memFact.empty{color:var(--ink3);font-style:italic;background:transparent;border-style:dashed}
+.memFact b{color:var(--teal)}
+.mcpMatrix{display:grid;gap:6px;margin:16px 0;justify-content:start}
+.mcpCell{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#141b26;border:1px solid var(--rose);border-radius:8px;font-size:14px}
+.mcpHub{display:flex;align-items:center;justify-content:center;gap:22px;margin:20px 0;flex-wrap:wrap}
+.hubCol{display:flex;flex-direction:column;gap:8px}
+.hubChip{font-family:var(--sans);font-weight:700;font-size:12px;background:#141b26;border:1px solid #5fe08a55;color:var(--green);border-radius:9px;padding:8px 12px;white-space:nowrap}
+.hubCenter{font-family:var(--serif);font-weight:640;font-size:16px;color:var(--teal);background:var(--teal-dim);border:1px solid #3dd6c355;border-radius:16px;padding:16px 20px;text-align:center}
+.stepperRow{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0}
+.stepperGroup{display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--ink3)}
+.stepperGroup>div{display:flex;align-items:center;gap:10px}
+.stepperBtn{font-family:var(--mono);font-weight:700;font-size:15px;background:#141b26;color:var(--ink2);border:1px solid var(--line);border-radius:8px;width:30px;height:30px;cursor:pointer}
+.stepperBtn:hover{border-color:var(--orange);color:var(--orange)}
+.stepperVal{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--ink);min-width:20px;text-align:center}
+.consentCard{background:#0a0d12;border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:16px 0}
+.consentCard .cc-h{font-family:var(--serif);font-size:16.5px;font-weight:600;color:var(--ink);margin-bottom:14px}
+.scopeRow{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.scopeRow:last-of-type{border-bottom:none}
+.scopeRow div{font-size:13px;color:var(--ink2)}
+.scopeRow div b{display:block;color:var(--ink);font-size:14px;margin-bottom:1px}
+.scopeCheck{width:22px;height:22px;flex-shrink:0;border-radius:6px;border:1px solid var(--line);background:#141b26;cursor:pointer;margin-top:2px;color:transparent}
+.scopeCheck.on{background:var(--green);border-color:var(--green);color:#0a0d12;font-weight:700;font-size:14px;line-height:20px}
+/* ---- Class 16 additions — terminal / agent-roster visual language ---- */
+.term{background:#07090d;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:16px 0}
+.term .tHead{background:#141b26;border-bottom:1px solid var(--line);padding:8px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:8px}
+.term .tDot{width:9px;height:9px;border-radius:100px;background:#33405288;flex-shrink:0}
+.term .tDot.r{background:#ff616188}.term .tDot.y{background:#ffd16688}.term .tDot.g{background:#5fe08a88}
+.term .tHead .tName{margin-left:6px}
+.term pre{font-family:var(--mono);font-size:12.5px;line-height:1.8;padding:16px 18px;overflow-x:auto;color:#c7d2e0;margin:0}
+.term pre .pr{color:var(--orange);user-select:none}
+.term pre .cm{color:#5b6b7f}
+.term pre .ok{color:var(--green)}
+.term pre .wn{color:var(--gold)}
+.term pre .pa{color:#7cc4ff}
+.gemPanel{background:#0f141b;border:1px solid #a48bff44;border-radius:16px;overflow:hidden;margin:18px 0}
+.gemPanel .gpHead{background:linear-gradient(90deg,#1b1630,#141b26);border-bottom:1px solid #a48bff33;padding:12px 18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);font-weight:700}
+.gemPanel .gpBody{padding:18px 20px}
+.gemField{margin-bottom:16px}
+.gemField:last-child{margin-bottom:0}
+.gemField .gfl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;display:block}
+.gemField .gfBox{background:#0a0d12;border:1px solid var(--line);border-radius:10px;padding:12px 15px;font-size:13.5px;color:var(--ink2);line-height:1.7;white-space:pre-wrap}
+.gemField .gfBox b{color:var(--ink)}
+.gemField .gfBox.one{white-space:normal;color:var(--ink);font-weight:600}
+.fileTree{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:16px 0;font-family:var(--mono);font-size:12.5px;line-height:1.9;overflow-x:auto}
+.ftRow{display:flex;gap:14px;white-space:nowrap}
+.ftRow .ftn{color:var(--ink2)}
+.ftRow .ftn b{color:var(--gold);font-weight:500}
+.ftRow .ftc{color:var(--ink3);font-size:11.5px;white-space:normal}
+.agentRoster{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media(max-width:820px){.agentRoster{grid-template-columns:1fr}}
+.agRole{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:20px 22px;position:relative}
+.agRole.r1{border-color:#3dd6c344}.agRole.r2{border-color:#ff6b8b3a}
+.agRole .arb{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:10px}
+.agRole.r1 .arb{color:var(--teal)}.agRole.r2 .arb{color:var(--rose)}
+.agRole h4{font-size:17px;margin-bottom:6px}
+.agRole p{font-size:13.5px;line-height:1.65}
+.agRole .arp{font-family:var(--mono);font-size:11.5px;color:var(--gold);background:#0a0d12;border:1px solid var(--line);border-radius:7px;padding:5px 9px;display:inline-block;margin-top:10px;word-break:break-all}
+.handoff{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin:16px 0}
+.hoBox{font-family:var(--sans);font-weight:700;font-size:12.5px;background:#141b26;border:1px solid var(--line);color:var(--ink2);border-radius:10px;padding:11px 15px;text-align:center;white-space:nowrap}
+.hoBox.f{border-color:#ffd16655;color:var(--gold);font-family:var(--mono);font-size:11.5px}
+.hoArr{font-family:var(--mono);color:var(--ink3);font-size:15px}
+.raceGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+@media(max-width:820px){.raceGrid{grid-template-columns:1fr}}
+.lane{background:#0a0d12;border:1px solid var(--line);border-radius:14px;padding:16px 18px;transition:.3s}
+.lane.win{border-color:#5fe08a55}
+.lane .lnH{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.lane .lnH b{color:var(--ink);font-size:13px;font-family:var(--sans);letter-spacing:0;text-transform:none}
+.lStep{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink3);padding:6px 0;opacity:.3;transition:.35s}
+.lStep.on{opacity:1;color:var(--ink2)}
+.lStep .lsi{font-size:13px;flex-shrink:0;width:18px}
+.lStep.on .lsi{color:var(--teal)}
+.meter{margin:10px 0}
+.meter .mtl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.meter .mtl .mtv{color:var(--ink);font-weight:700}
+.meter .mtBar{height:9px;border-radius:100px;background:#181f2b;border:1px solid var(--line);overflow:hidden}
+.meter .mtFill{height:100%;width:0;border-radius:100px;transition:width .45s ease}
+.meter .mtFill.g{background:var(--green)}.meter .mtFill.o{background:var(--orange)}.meter .mtFill.r{background:var(--red)}.meter .mtFill.t{background:var(--teal)}
+.srcGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+@media(max-width:820px){.srcGrid{grid-template-columns:1fr}}
+.srcCard{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.srcCard .scn{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:6px}
+.srcCard p{font-size:12.5px;line-height:1.6;color:var(--ink2)}
+.claimRow{background:#0f141b;border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin:9px 0;transition:.25s}
+.claimRow .crt{font-size:13.5px;color:var(--ink2);margin-bottom:10px}
+.claimRow .crBtns{display:flex;gap:8px;flex-wrap:wrap}
+.crBtn{font-family:var(--sans);font-weight:700;font-size:11.5px;background:#141b26;border:1px solid var(--line);color:var(--ink3);border-radius:100px;padding:6px 14px;cursor:pointer;transition:.2s}
+.crBtn:hover{border-color:var(--orange);color:var(--orange2)}
+.crBtn.sel{border-color:var(--violet);background:var(--violet-dim);color:var(--violet)}
+.claimRow.done{opacity:.9}
+.claimRow.right{border-color:#5fe08a55}.claimRow.miss{border-color:#ff616155}
+.claimRow .crWhy{font-size:12.5px;color:var(--ink3);margin-top:10px;display:none}
+.claimRow.done .crWhy{display:block}
+.briefOut{background:#0a0d12;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:14px;font-size:13.5px;line-height:1.8}
+.briefOut .bl{color:var(--ink2);display:block;padding:3px 0}
+.briefOut .bl.kept{color:var(--ink)}
+.briefOut .bl.flag{color:var(--gold)}
+.briefOut .bl.cut{color:var(--ink3);text-decoration:line-through}
+.askBoard{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.askCard{background:#0f141b;border:1px solid var(--line);border-radius:12px;padding:12px 15px;transition:.25s}
+.askCard .acq{font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+.askCard .acBtns{display:flex;gap:7px;flex-wrap:wrap}
+.acBtn{font-family:var(--sans);font-weight:700;font-size:11.5px;background:#141b26;border:1px solid var(--line);color:var(--ink3);border-radius:9px;padding:6px 12px;cursor:pointer;transition:.2s}
+.acBtn:hover{border-color:var(--teal);color:var(--teal)}
+.acBtn.sel{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.askCard.good{border-color:#5fe08a55}.askCard.over{border-color:#ffd16655}.askCard.bad{border-color:#ff616155}
+.askCard .acWhy{font-size:12.5px;margin-top:9px;display:none;color:var(--ink3)}
+.askCard.judged .acWhy{display:block}
+</style>
+</head>
+<body>
+<div id="progressBar"></div>
+<nav class="topnav"><div class="wrap">
+<span class="brand">🐾 Scaler AIML · Class 16</span>
+<a class="nl" href="#open">The Ask</a>
+<a class="nl" href="#concept">Personal &amp; Always-On</a>
+<a class="nl" href="#gem">Build 1 · Gem</a>
+<a class="nl" href="#openclaw">Build 2 · OpenClaw</a>
+<a class="nl" href="#twoagents">Build 3 · Two Agents</a>
+<a class="nl" href="#hands">Hands via n8n</a>
+<a class="nl" href="#tradeoffs">When Not To</a>
+<a class="nl" href="#takehome">Take-Home</a>
+<a class="nl" href="#wrap">Wrap-Up</a>
+</div></nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">
+    <span class="chip hot">CLASS 16 / SESSION SCRIPT</span>
+    <span class="chip">PERSONAL AGENTS</span>
+    <span class="chip cool">MULTI-AGENT SYSTEMS</span>
+    <span class="chip">100% FREE TIER</span>
+    <span class="chip">RUNS ON YOUR MACHINE</span>
+  </div>
+  <h1>Your Own Agent — <span class="amp">and a Second Opinion</span></h1>
+  <p class="sub"><b>Last class ended on Priya's question: what happens when the sources actually disagree?</b> The honest answer is that one agent, marking its own homework, is the wrong shape for that job. Today you'll build a personal agent three ways — a Gemini Gem in ten minutes, then OpenClaw running on your own machine with memory you can open in a text editor, and finally a <em>second</em> agent whose only job is to distrust the first one. Then we'll spend real time on the harder question: when two agents is the wrong answer.</p>
+
+  <div class="slackDrop" style="margin-top:32px">
+    <div class="av">📻</div>
+    <div><span class="nm">Imran → Groundwire newsroom</span><span class="tm">8:40 AM · Monday</span>
+    <p>"Two things from last week. One — Priya's right, nothing that writes its own copy should also be the thing that approves it. Two — Advait filed a tip at 11:40pm on Friday and it sat unread until Monday because the whole setup lives in a browser tab on Zara's laptop. Fix both."</p></div>
+  </div>
+  <p style="font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--orange2);margin-top:14px">🐾🧠🔍 Today's rule: your agent, your disk, your rules — and nothing gets published without a second reader.</p>
+
+  <div class="heroStats">
+    <div class="hstat"><div class="n" data-count="3">0</div><div class="l">Agents You'll Build</div></div>
+    <div class="hstat"><div class="n" data-count="5">0</div><div class="l">Live Simulators</div></div>
+    <div class="hstat"><div class="n" data-count="5">0</div><div class="l">Checkpoint Quizzes</div></div>
+    <div class="hstat"><div class="n" data-count="0">0</div><div class="l">Paid API Keys</div></div>
+  </div>
+  <div class="agenda">
+    <h3>Today's Flight Plan · ~108 Minutes</h3>
+    <div class="agRow"><span class="t">00:00–00:06</span><span class="name">The Ask</span><span class="tag">SETUP</span></div>
+    <div class="agRow"><span class="t">00:06–00:18</span><span class="name">Personal, Always-On, and Why Two</span><span class="tag simtag">SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">00:18–00:28</span><span class="name">Build 1 — Your Gem in Ten Minutes</span><span class="tag simtag">BUILD + QUIZ</span></div>
+    <div class="agRow"><span class="t">00:28–00:48</span><span class="name">Build 2 — OpenClaw on Your Machine</span><span class="tag simtag">BUILD + SIM</span></div>
+    <div class="agRow"><span class="t">00:48–00:54</span><span class="name">☕ Stretch break <span style="color:var(--ink3);font-weight:400">(install stragglers catch up here)</span></span><span class="tag">BREAK</span></div>
+    <div class="agRow"><span class="t">00:54–01:18</span><span class="name">Build 3 — The Second Agent</span><span class="tag simtag">BUILD + SIM + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:18–01:28</span><span class="name">Giving It Hands — the n8n Webhook</span><span class="tag simtag">DEMO + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:28–01:42</span><span class="name">When Two Agents Is the Wrong Answer</span><span class="tag simtag">2 SIMS + QUIZ</span></div>
+    <div class="agRow"><span class="t">01:42–01:48</span><span class="name">Take-Home &amp; Wrap-Up</span><span class="tag">3 CHALLENGES</span></div>
+  </div>
+</div></header>
+
+<!-- ============ SECTION: OPEN ============ -->
+<section class="blk" id="open"><div class="wrap">
+  <div class="secHead"><span class="secNum">SETUP</span><h2>The Ask</h2><span class="secTime">⏱ 6 min</span></div>
+  <p class="secLede">Two complaints, one Monday morning. They look unrelated. They're the same class.</p>
+
+  <div class="card" style="border-color:#3dd6c344">
+    <h4 style="color:var(--teal)">Groundwire Newsroom · Monday, 8:40 AM</h4>
+    <p style="font-size:14.5px;margin-bottom:14px">Class 15's research agent worked — Zara got a real, sourced brief out of it in under an hour. But it has two holes, and the newsroom found both of them within a week. Advait's 11:40pm tip went nowhere because the agent only exists while Zara's browser tab is open. And Priya won't sign off on anything where the same model that wrote the brief also declared it accurate.</p>
+    <table class="tbl">
+      <tr><th>Who</th><th>What they need from today's build</th></tr>
+      <tr><td>Advait</td><td>Something on his phone that knows Groundwire's house style — with nothing to install in the field</td></tr>
+      <tr><td>Zara</td><td>An agent that keeps running, and remembers her, when the laptop lid closes</td></tr>
+      <tr><td>Priya</td><td>A second reader that is structurally separate from the writer — not the same one asked twice</td></tr>
+      <tr><td>Imran</td><td>None of this to cost anything or need a new app on anyone's phone</td></tr>
+    </table>
+  </div>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says — Cold Open</span>
+    <p>"Everything you've built so far in this course has been someone else's software running on someone else's server. n8n cloud. Relevance AI. ChatGPT. You rented all of it. Today, for the first time, an agent is going to run <em>on the machine in front of you</em>, and its memory is going to be a file you can open in Notepad."</p>
+    <p>"And then we're going to do the thing everyone skips. Everybody builds the second agent because it sounds impressive. Almost nobody asks whether it was worth it. The last section of today is entirely about that question — and one of the sims is scored so that <em>adding agents loses you points</em>."</p>
+  </div>
+
+  <div class="note beg"><b>Beginner Note — three builds, deliberately unequal:</b> Build 1 takes ten minutes and needs no install at all. Build 2 needs a terminal. Build 3 is one command on top of Build 2. That order is on purpose — by the ten-minute mark every single person in this room has a working personal agent, no matter what their laptop does later.</div>
+</div></section>
+
+<!-- ============ SECTION: CONCEPT ============ -->
+<section class="blk" id="concept"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 1</span><h2>Personal, Always-On, and Why Two</h2><span class="secTime">⏱ 12 min</span></div>
+  <p class="secLede">Three words that get used loosely all the time. Each one means something specific, and each one costs something.</p>
+
+  <div class="defBox">
+    <div class="term">Personal agent</div>
+    <p>An agent that carries <b>your</b> context across sessions — your style, your projects, your prior conversations — instead of starting from zero every time. The word that matters is <em>persistent</em>, not <em>private</em>. A Gemini Gem is personal. It is not private in the sense of "on your disk."</p>
+  </div>
+
+  <div class="defBox">
+    <div class="term">Always-on</div>
+    <p>The agent is a <b>process that keeps running</b> when you're not looking at it — so it can be triggered by a timer or an incoming message at 11:40pm, not just by you typing. This is the part a browser tab can never do, and it's the entire reason OpenClaw runs a background service called the <em>gateway</em>.</p>
+  </div>
+
+  <div class="defBox">
+    <div class="term">Multi-agent system</div>
+    <p>Two or more agents with <b>separate instructions, separate context, and a defined handoff</b> between them. The separation is the whole product. Two prompts inside one conversation is not a multi-agent system — the second "agent" has already read, and been influenced by, everything the first one said.</p>
+  </div>
+
+  <div class="analogy">
+    <div class="ic">📰</div>
+    <div><div class="tt">The newsroom analogy</div>
+    <p><b>Groundwire doesn't let reporters approve their own copy — and not because reporters are dishonest.</b> It's because the person who wrote a sentence has already decided that sentence is right; that's why they wrote it. A sub-editor catches things the writer structurally cannot. Multi-agent systems are that org chart, in software. The reviewer agent isn't smarter than the researcher. It's just <em>uncontaminated</em> — it never saw the reasoning that produced the draft, only the draft.</p></div>
+  </div>
+
+  <div class="card">
+    <h4>The orchestrator + sub-agent shape</h4>
+    <p>Almost every multi-agent system you'll meet is one of two shapes, and it's worth being able to name them out loud:</p>
+    <table class="tbl">
+      <tr><th>Shape</th><th>How it runs</th><th>Good for</th></tr>
+      <tr><td>Pipeline (handoff)</td><td>Agent A finishes, writes its output somewhere, Agent B picks it up. Fixed order.</td><td>Draft → review. Research → write. Anything with a clear "then".</td></tr>
+      <tr><td>Orchestrator + sub-agents</td><td>A manager agent decides at runtime which specialists to spawn, and how many.</td><td>Jobs where you don't know the sub-tasks until you've read the request.</td></tr>
+    </table>
+    <p style="margin-top:12px"><b>Today you're building the pipeline shape</b> — researcher hands to reviewer, every time, in that order. The orchestrator shape gets a proper look in §4, because OpenClaw supports it natively, but we are deliberately not building it. A fixed handoff you can debug beats a dynamic one you can't.</p>
+  </div>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/944/original/1.jpeg?1777286568" alt="OpenClaw architecture — gateway, skills, memory, heartbeat, LLM">
+    <div class="svgCap">The five parts of an always-on personal agent — gateway, skills, memory, heartbeat, and the model. Only the last one lives in the cloud.</div>
+  </div>
+
+  <div class="card">
+    <h4>The five parts, in plain words</h4>
+    <table class="tbl">
+      <tr><th>Part</th><th>What it does</th><th>Why you care today</th></tr>
+      <tr><td>Gateway</td><td>The background service that receives messages and routes them to an agent</td><td>This is what "always-on" actually <em>is</em>. It's also what routes to agent #1 vs agent #2.</td></tr>
+      <tr><td>Skills</td><td>The tools the agent can reach for — web search, reading and writing files</td><td>Writing a file is how our two agents hand work to each other.</td></tr>
+      <tr><td>Memory</td><td>Plain Markdown files in a workspace folder on your disk</td><td>Openable, greppable, backup-able. And separate per agent by default.</td></tr>
+      <tr><td>Heartbeat</td><td>A scheduler that can wake the agent on a timer</td><td>The answer to Advait's 11:40pm tip.</td></tr>
+      <tr><td>Model (LLM)</td><td>The actual reasoning, reached by API key</td><td>Free Gemini today. Swap the key, everything else stays.</td></tr>
+    </table>
+  </div>
+
+  <div class="sim" id="sim1">
+    <h3>⚡ Simulator 1 — One Agent vs Two, Side by Side</h3>
+    <p class="simSub">The same job — research a contested claim and produce a publishable brief — run down both lanes at once. Watch all three meters, not just the quality one.</p>
+    <div class="pickRow" id="s1Job"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+      <button class="btn sm" id="s1Run">▶ Run both lanes</button>
+      <button class="btn ghost sm" id="s1Reset">↺ Reset</button>
+    </div>
+    <div class="raceGrid">
+      <div class="lane" id="s1LaneA">
+        <div class="lnH"><b>Lane A · One agent</b><span id="s1ClockA">0.0s</span></div>
+        <div id="s1StepsA"></div>
+      </div>
+      <div class="lane" id="s1LaneB">
+        <div class="lnH"><b>Lane B · Researcher + Reviewer</b><span id="s1ClockB">0.0s</span></div>
+        <div id="s1StepsB"></div>
+      </div>
+    </div>
+    <div class="grid3" style="margin-top:16px">
+      <div class="meter"><div class="mtl"><span>Wall-clock time</span><span class="mtv" id="s1mT">—</span></div><div class="mtBar"><div class="mtFill o" id="s1fT"></div></div></div>
+      <div class="meter"><div class="mtl"><span>Model calls</span><span class="mtv" id="s1mC">—</span></div><div class="mtBar"><div class="mtFill r" id="s1fC"></div></div></div>
+      <div class="meter"><div class="mtl"><span>Errors caught</span><span class="mtv" id="s1mQ">—</span></div><div class="mtBar"><div class="mtFill g" id="s1fQ"></div></div></div>
+    </div>
+    <div class="verdict" id="s1V" style="display:none"></div>
+  </div>
+
+  <div class="quiz" id="q1">
+    <p class="q">Zara asks her single research agent to write a brief, then in the very next message asks it: "now review that brief critically and flag anything unsupported." Is that a multi-agent system?</p>
+    <div class="opt" data-c="0"><span class="ab">A</span><span>Yes — two distinct tasks were performed, so there are effectively two agents.</span></div>
+    <div class="opt" data-c="1"><span class="ab">B</span><span>No — the reviewer shares the writer's context, so it inherits the same assumptions it's supposed to catch.</span></div>
+    <div class="opt" data-c="0"><span class="ab">C</span><span>Yes, as long as the second message uses the word "critically".</span></div>
+    <div class="opt" data-c="0"><span class="ab">D</span><span>No — multi-agent requires the two agents to run on different machines.</span></div>
+    <div class="quizWhy"><b>Answer: B.</b> The separation that makes a review worth anything is <em>context separation</em>, not task separation. In one conversation, the "reviewer" can see every step of reasoning that produced the draft — including the shaky leap it should be flagging — and that reasoning reads as justification, not as evidence. This is the single most common fake multi-agent setup, and it's fake in a way that's hard to notice because the output <em>looks</em> like a review. Different machines have nothing to do with it (D): the reviewer we build today runs on the same laptop as the researcher. It just can't see inside its head.</div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: BUILD 1 — GEM ============ -->
+<section class="blk" id="gem"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 2</span><h2>Build 1 — Your Gem in Ten Minutes</h2><span class="secTime">⏱ 10 min</span></div>
+  <p class="secLede">No terminal, no install, no API key, no card. This is Advait's phone agent — and it's everyone's safety net for the rest of today.</p>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says</span>
+    <p>"Before we touch a terminal, everyone in this room is going to have a working personal agent. Ten minutes, browser only. I'm doing it this way for a very practical reason: the next build involves installing software on twenty different laptops, and I have never once seen that go perfectly for everyone. If your OpenClaw install fights you later, you still built an agent today."</p>
+  </div>
+
+  <div class="defBox">
+    <div class="term">Gem</div>
+    <p>Google's name for a saved, reusable set of instructions inside the Gemini app — a custom assistant you configure once and then open like a contact. Instructions plus optional reference files. <b>Free on every Gemini plan, including the free tier</b> — no Pro or Ultra needed.</p>
+  </div>
+
+  <div class="note pro"><b>Why a Gem replaces the messaging bot:</b> the original version of this class connected the agent to Telegram. We cut it. A bot needs registration with @BotFather, a token, and a fiddly rule about who has to message whom first — and it puts a second app on everyone's phone. A Gem does the same job Advait actually needed (his agent, on his phone, wherever he is) with a Google account he already has. When you see "Telegram" in an agent tutorial, ask what job it's doing. Usually the job is <em>reachability</em>, and there's a cheaper way to get it.</div>
+
+  <ol class="verifySteps">
+    <li>Open <code>gemini.google.com</code> on a <b>computer</b> and sign in with a personal Google account. Creating and editing Gems is web-app only — the mobile app can use them but not build them.</li>
+    <li>In the left sidebar, find <b>Explore Gems</b>, then click <b>New Gem</b>. If your sidebar is collapsed, expand it with the ☰ icon first.</li>
+    <li>Give it a name. Ours: <code>Groundwire Desk Editor</code>.</li>
+    <li>Paste the instructions from the panel below into the <b>Instructions</b> box. Read it out loud as you paste — every line in it is doing a job.</li>
+    <li><i>(Optional)</i> Under <b>Knowledge</b>, click <b>Add files</b> and upload a style guide or a couple of past articles. Up to 10 files, 100 MB each. This is what makes it <em>Groundwire's</em> editor rather than a generic one.</li>
+    <li>Click <b>Save</b>. Open it from the sidebar and paste in a rough paragraph to see it work. The Gem now also appears in the Gemini mobile app under the same account.</li>
+  </ol>
+
+  <div class="gemPanel">
+    <div class="gpHead">◆ Gem editor — what to type</div>
+    <div class="gpBody">
+      <div class="gemField">
+        <span class="gfl">Name</span>
+        <div class="gfBox one">Groundwire Desk Editor</div>
+      </div>
+      <div class="gemField">
+        <span class="gfl">Instructions</span>
+        <div class="gfBox">You are the desk editor for Groundwire, a small digital newsroom.
+
+When I paste rough copy or a field note, do exactly this, in this order:
+1. Rewrite it as a tight news paragraph, maximum 90 words, plain language, no adjectives doing the work of facts.
+2. List every factual claim you found, as bullets.
+3. For each claim, mark it VERIFIED, NEEDS SOURCE, or UNSUPPORTED. Never guess a source — if I did not give you one, it is NEEDS SOURCE.
+4. End with one line: the single question a sub-editor would ask before publishing.
+
+Rules you never break:
+- Never invent a name, a number, a date, or a location.
+- If the note is too thin to write from, say so and ask for the missing piece instead of filling the gap.
+- Keep my wording where it is already good. You are editing, not rewriting for sport.</div>
+      </div>
+      <div class="gemField">
+        <span class="gfl">Knowledge <span style="color:var(--ink3)">(optional)</span></span>
+        <div class="gfBox">groundwire-style-guide.pdf · three past published pieces</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="say do">
+    <span class="who">🎙 Instructor Does — live, 3 min</span>
+    <p>"Paste this in and let them watch: <em>'Locals say the new pump station near the river has been running since about March and it has apparently already stopped one flood, the council reckons it cost around 4 crore.'</em>"</p>
+    <p>"Point at the output. Every single one of those claims comes back NEEDS SOURCE or UNSUPPORTED — <em>because I didn't give it a source for any of them.</em> That's rule 3 doing its job. Then ask the room: which line in the instructions is stopping it from helpfully inventing a council spokesperson? Someone will find it."</p>
+  </div>
+
+  <div class="grid2">
+    <div class="colCard" style="border-color:#5fe08a44">
+      <div class="ct" style="color:var(--green)">✓ What the Gem gives you</div>
+      <p>Reusable instructions you configure once. Reference files it reads every time. Works on web, phone, and the Gemini side panel. Free. Ready in ten minutes. Genuinely useful for the 80% case.</p>
+    </div>
+    <div class="colCard" style="border-color:#ff6b8b44">
+      <div class="ct" style="color:var(--rose)">✗ What it can't do</div>
+      <p>It can't run when you're not there — no timer, no incoming trigger. It can't read or write files on your laptop. Its memory of your conversations isn't a file you own. And it's one agent: it can't hand work to a colleague.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:18px">That right-hand column is not a criticism of Gems — it's a specification for the next build. <b>Every single one of those four gaps is something the next section closes.</b></p>
+
+  <div class="quiz" id="q2">
+    <p class="q">Advait wants his Gem to check tips against Groundwire's house style automatically at 6am each day, before he wakes up. What's the honest answer?</p>
+    <div class="opt" data-c="0"><span class="ab">A</span><span>Add "run this every morning at 6am" to the Gem's Instructions.</span></div>
+    <div class="opt" data-c="0"><span class="ab">B</span><span>Upload a schedule file under Knowledge and the Gem will follow it.</span></div>
+    <div class="opt" data-c="1"><span class="ab">C</span><span>A Gem can't do it — it only runs when a human opens it and types. Scheduling needs something always-on.</span></div>
+    <div class="opt" data-c="0"><span class="ab">D</span><span>It works if he leaves the Gemini tab open overnight.</span></div>
+    <div class="quizWhy"><b>Answer: C.</b> A Gem is a saved <em>configuration</em>, not a running process. There is nothing there to wake up. Instructions describe how to respond when someone talks to it — they can't cause it to start talking. This is exactly the personal-vs-always-on distinction from §1, and it's the specific gap the gateway in the next build fills. Option D is the tempting one: an open browser tab feels like something running, but the tab is just a window onto a service that only acts when prompted.</div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: BUILD 2 — OPENCLAW ============ -->
+<section class="blk" id="openclaw"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 3</span><h2>Build 2 — OpenClaw on Your Machine</h2><span class="secTime">⏱ 20 min</span></div>
+  <p class="secLede">Same idea as the Gem — a personal agent — but this one is a process running on your hardware, with memory you can <code class="k">cat</code>.</p>
+
+  <div class="note adv"><b>Instructor — before you teach this live:</b> run the entire install on a clean machine (or a fresh user account) the night before, and screenshot every wizard screen as it exists <em>this week</em>. OpenClaw ships fast and wizard wording moves. Also decide your fallback now: if more than a third of the room is stuck at the ten-minute mark, stop, demo the rest from your screen, and hand them §7's install checklist as homework. <b>Build 1 working for everyone beats Build 3 working for four people.</b></div>
+
+  <div class="card">
+    <h4>What OpenClaw actually is</h4>
+    <p>An open-source agent runtime you install on your own computer. It gives you the four things a Gem couldn't: a background service that keeps running, tools that reach your filesystem and the web, memory stored as Markdown files in a folder you own, and — the reason we're here — the ability to run <b>more than one agent</b>, each with its own workspace and its own instructions.</p>
+    <p style="margin-top:10px">You still rent the thinking. The model is Gemini, over the free API tier, reached by a key. What you stop renting is everything around it.</p>
+  </div>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/945/original/2.jpeg?1777286718" alt="OpenClaw compared with managed AI platforms">
+    <div class="svgCap">Renting a furnished flat versus owning the place. Both are legitimate choices — they're just different failure modes.</div>
+  </div>
+
+  <h3 style="margin-top:36px;font-size:22px">Step 1 — Get a free Gemini API key</h3>
+  <ol class="verifySteps">
+    <li>Go to <code>aistudio.google.com</code> and sign in with a Google account.</li>
+    <li>Click <b>Get API key</b> (top right), then <b>Create API key</b>. Let it create a project if it offers.</li>
+    <li>Copy the key — it starts with <code>AIza</code>. Park it in a notes file for the next two minutes.</li>
+    <li>While you're there, open <code>aistudio.google.com/rate-limit</code> and look at <b>your own</b> live limits for the model you plan to use.</li>
+  </ol>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/948/original/3.jpeg?1777287001" alt="Getting a Gemini API key in Google AI Studio">
+    <div class="svgCap">AI Studio → Get API key. No credit card, no billing account.</div>
+  </div>
+
+  <div class="note pro"><b>Read this before you quote a number at your class:</b> Google cut free-tier daily request limits sharply in December 2025, and the ceilings have moved several times since — different models now sit at wildly different daily allowances, and older tutorials confidently quoting "1,500 requests a day" are simply out of date. Don't teach a number from memory or from this script. Open the rate-limit page in AI Studio on the day and read what <em>your</em> account actually has. The teaching point survives regardless: <b>free tiers are metered, the meter moves, and twenty students sharing a classroom Wi-Fi find the ceiling much faster than one person at home.</b></div>
+
+  <h3 style="margin-top:36px;font-size:22px">Step 2 — Check Node, then install</h3>
+  <p>OpenClaw runs on Node.js. Check what you have before installing anything:</p>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> node --version
+v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the docs recommend</span></pre>
+  </div>
+
+  <p>If that command errors, or the number is below the line above, install the LTS build from <code class="k">nodejs.org</code> first and reopen your terminal. Then install OpenClaw:</p>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">macOS / Linux</span></div>
+<pre><span class="pr">$</span> curl -fsSL https://openclaw.ai/install.sh | bash</pre>
+  </div>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">Windows PowerShell</span></div>
+<pre><span class="pr">&gt;</span> iwr -useb https://openclaw.ai/install.ps1 | iex</pre>
+  </div>
+  <p>Already comfortable with npm, or the installer script won't run in your environment? The package works the ordinary way too:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">any platform</span></div>
+<pre><span class="pr">$</span> npm install -g openclaw@latest</pre>
+  </div>
+
+  <div class="note adv"><b>Say this out loud when you run the curl line:</b> "Piping a script from the internet straight into a shell is a real thing to be thoughtful about — you're running whatever that URL serves, with your permissions. It's a normal install pattern for developer tools, and it's fine for a project you've chosen to trust, but the habit worth keeping is: know whose domain it is before you pipe it. If that makes you uncomfortable, the npm line does the same job." Don't skip this. Half the room has copy-pasted a curl-to-bash before without ever thinking about it.</div>
+
+  <h3 style="margin-top:36px;font-size:22px">Step 3 — Onboard</h3>
+  <p>One command starts a wizard. The <code class="k">--install-daemon</code> flag is the part that makes it always-on — it registers the gateway as a background service so it survives you closing the terminal.</p>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> openclaw onboard --install-daemon</pre>
+  </div>
+
+  <p>Answer it like this. Anything not listed, take the default:</p>
+  <table class="tbl">
+    <tr><th>Wizard asks</th><th>Answer</th><th>Why</th></tr>
+    <tr><td>Acknowledge risk warning</td><td>Yes</td><td>It's telling you the agent can touch your files. It genuinely can.</td></tr>
+    <tr><td>Onboarding mode</td><td>QuickStart</td><td>Minutes instead of a tour.</td></tr>
+    <tr><td>Model provider</td><td>Google</td><td>Free tier, no card.</td></tr>
+    <tr><td>Auth method</td><td>Gemini API key</td><td>The <code class="k">AIza…</code> key from Step 1.</td></tr>
+    <tr><td>Default model</td><td><code class="k">gemini-2.5-flash</code></td><td>Fast and cheap. Check its current free daily limit before class.</td></tr>
+    <tr><td>Add a channel now?</td><td><b>Skip</b></td><td>This is where Telegram/WhatsApp would go. We're using the built-in browser chat instead.</td></tr>
+    <tr><td>Search provider</td><td>DuckDuckGo</td><td>No key required.</td></tr>
+    <tr><td>Configure skills now?</td><td>No</td><td>Defaults are enough for today.</td></tr>
+    <tr><td>Enable hooks?</td><td>Skip for now</td><td>Space to select, Enter to confirm — this one catches people out.</td></tr>
+    <tr><td>Gateway service</td><td>Install / Restart</td><td>This is the always-on part.</td></tr>
+    <tr><td>How to hatch your agent</td><td>Hatch in terminal</td><td>You'll see it come up live.</td></tr>
+  </table>
+
+  <h3 style="margin-top:32px;font-size:22px">Step 4 — Confirm it's alive</h3>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> openclaw gateway status
+<span class="ok">● running</span>  <span class="cm">loopback 127.0.0.1:18789 · token auth</span>
+
+<span class="pr">$</span> openclaw doctor
+<span class="ok">✓</span> node version
+<span class="ok">✓</span> gateway reachable
+<span class="ok">✓</span> model provider configured
+<span class="wn">!</span> no channels configured   <span class="cm"># expected — we skipped that on purpose</span></pre>
+  </div>
+  <p>Mostly green is a pass. The channels warning is the one we caused deliberately. Now open the dashboard:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> openclaw dashboard
+<span class="cm"># opens the Control UI and hands over an auth token</span>
+<span class="pa">http://127.0.0.1:18789</span></pre>
+  </div>
+  <p>Find the <b>Chat</b> tab and type <code class="k">Hello — can you hear me?</code>. When it answers, you have a personal agent running on your own machine.</p>
+
+  <div class="note beg"><b>Beginner Note — <code class="k">127.0.0.1</code> means "this computer, and only this computer."</b> That address is not on the internet. Nobody else can reach your dashboard, even on the same Wi-Fi. That's a feature, and it's also why there's no login screen worth the name — the token in your terminal is the whole security model. Never port-forward this to the open internet. If you want it from your phone later, put both devices on a private network like Tailscale.</div>
+
+  <h3 style="margin-top:36px;font-size:22px">Step 5 — Three prompts that show you what changed</h3>
+  <div class="grid3">
+    <div class="useCase"><div class="ico">💬</div><div class="co">Prompt 1 · baseline</div><h4>Just a question</h4><p>"In under five lines, what's the difference between a list and a tuple in Python?" Answers instantly. This is the part a Gem also does. Nothing new yet.</p></div>
+    <div class="useCase"><div class="ico">🌐</div><div class="co">Prompt 2 · tools</div><h4>Make it leave the room</h4><p>"Search the web for what changed in Python 3.14 and summarise the top three in two sentences each." Watch for real links. It went out and read pages.</p></div>
+    <div class="useCase"><div class="ico">🧠</div><div class="co">Prompt 3 · memory</div><h4>Make it remember</h4><p>"Remember: I'm Zara, I produce for Groundwire, and I write in short sentences." Now <b>close the tab</b>. Reopen it. Ask "what do you know about me?"</p></div>
+  </div>
+
+  <div class="say do">
+    <span class="who">🎙 Instructor Does — the moment that lands</span>
+    <p>"After prompt 3, don't just reopen the tab. Go to a terminal and show them the file. This is the beat of the whole section — the memory isn't <em>described</em> as a file, it <em>is</em> a file, and I can print it on screen."</p>
+  </div>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> ls ~/.openclaw/workspace
+AGENTS.md   SOUL.md   USER.md   notes/
+
+<span class="pr">$</span> cat ~/.openclaw/workspace/USER.md
+<span class="cm"># User</span>
+- Name: Zara
+- Role: producer at Groundwire, a small digital newsroom
+- Style: prefers short sentences</pre>
+  </div>
+
+  <div class="fileTree">
+    <div class="ftRow"><span class="ftn">~/.openclaw/workspace/</span><span class="ftc">← your first agent's home. Its default working directory.</span></div>
+    <div class="ftRow"><span class="ftn">  ├── <b>AGENTS.md</b></span><span class="ftc">standing instructions — the agent's job description</span></div>
+    <div class="ftRow"><span class="ftn">  ├── <b>SOUL.md</b></span><span class="ftc">personality and tone</span></div>
+    <div class="ftRow"><span class="ftn">  ├── <b>USER.md</b></span><span class="ftc">what it has learned about you</span></div>
+    <div class="ftRow"><span class="ftn">  └── <b>notes/</b></span><span class="ftc">whatever it writes as it works</span></div>
+  </div>
+
+  <p><b>Three things follow from memory being plain Markdown, and they're all practical:</b> you can read it, so you can tell exactly why the agent thinks what it thinks. You can edit it, so fixing a wrong belief is a text edit rather than a re-training exercise. And you can <code class="k">git init</code> the folder, which means your agent's memory gets version history for free.</p>
+
+  <div class="sim" id="sim2">
+    <h3>⚡ Simulator 2 — The Memory Ledger</h3>
+    <p class="simSub">Send the same six messages to both. Watch what each one keeps. Then close the tab and see what actually survives.</p>
+    <div class="msgPills" id="s2Pills"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+      <button class="btn ghost sm" id="s2Close">✖ Close the tab / end the session</button>
+      <button class="btn ghost sm" id="s2Reset">↺ Reset</button>
+    </div>
+    <div class="memBank">
+      <div class="memLane" id="s2LaneGem">
+        <div class="ml-h">☁️ Gem — session context</div>
+        <div id="s2Gem"><div class="memFact empty">nothing yet</div></div>
+      </div>
+      <div class="memLane" id="s2LaneOC">
+        <div class="ml-h">💾 OpenClaw — ~/.openclaw/workspace/USER.md</div>
+        <div id="s2OC"><div class="memFact empty">file not created yet</div></div>
+      </div>
+    </div>
+    <div class="verdict" id="s2V" style="display:none"></div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: BUILD 3 — TWO AGENTS ============ -->
+<section class="blk" id="twoagents"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 4</span><h2>Build 3 — The Second Agent</h2><span class="secTime">⏱ 24 min</span></div>
+  <p class="secLede">Priya's ask, built. One new command, one new folder, one file that passes between them — and a reviewer that has never seen the researcher's reasoning.</p>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says</span>
+    <p>"Notice how small this build is. We are not installing anything new. We're not adding a framework with 'orchestration' in the name. We add one agent with one command, give it a different job description, and point both of them at one file. That's the whole multi-agent system."</p>
+    <p>"If that feels anticlimactic — good. Most of the complexity people associate with multi-agent systems is complexity they chose. The idea underneath is genuinely this small."</p>
+  </div>
+
+  <h3 style="margin-top:32px;font-size:22px">Step 1 — Add the reviewer</h3>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> openclaw agents add reviewer
+<span class="ok">✓</span> agent <span class="pa">reviewer</span> created
+  workspace  <span class="pa">~/.openclaw/workspace-reviewer</span>
+  state dir  <span class="pa">~/.openclaw/agents/reviewer/</span>
+
+<span class="pr">$</span> openclaw agents list --tree
+main      <span class="cm">(default)</span>  ~/.openclaw/workspace
+reviewer              ~/.openclaw/workspace-reviewer</pre>
+  </div>
+
+  <p>That one command gave the reviewer <b>its own workspace, its own state directory, and its own session store.</b> They are separate by default — which is exactly the property Priya is buying. The reviewer does not inherit the researcher's memory, its notes, or its conversation history.</p>
+
+  <div class="agentRoster">
+    <div class="agRole r1">
+      <div class="arb">◆ Agent 1</div>
+      <h4>main — the researcher</h4>
+      <p>Searches, reads, and drafts. Optimistic by design: its job is to find and assemble the story. Writes its draft to a file and stops.</p>
+      <span class="arp">~/.openclaw/workspace</span>
+    </div>
+    <div class="agRole r2">
+      <div class="arb">◆ Agent 2</div>
+      <h4>reviewer — the sub-editor</h4>
+      <p>Never searches, never drafts. Reads the file cold, hunts for unsupported claims and disagreeing sources, and writes a verdict beside it.</p>
+      <span class="arp">~/.openclaw/workspace-reviewer</span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;font-size:22px">Step 2 — Give each one its job description</h3>
+  <p>An agent's standing instructions live in <code class="k">AGENTS.md</code> in its own workspace. Open each in a text editor. The researcher's:</p>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace/AGENTS.md</span></div>
+<pre><span class="cm"># Role: Groundwire researcher</span>
+
+When I ask you to research a topic:
+1. Search the web and read the best 3-5 sources.
+2. Write a brief: summary, key claims as bullets, then a Sources list with links.
+3. Beside every claim, name which source it came from.
+4. Save it to <span class="pa">~/groundwire/briefs/&lt;topic&gt;.md</span>
+5. Reply with the file path. Do not self-assess. Someone else reads it.</pre>
+  </div>
+  <p>And the reviewer's — note how much of it is about what <em>not</em> to do:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace-reviewer/AGENTS.md</span></div>
+<pre><span class="cm"># Role: Groundwire sub-editor</span>
+
+You review briefs. You do not write them and you do not research.
+
+Given a file path, read it and produce, for every claim:
+  KEEP    - supported by a named source
+  FLAG    - sources disagree, or the source does not say this plainly
+  CUT     - no source at all, or the source does not exist
+
+Then: list any claim where two sources genuinely conflict, and say
+what a reader would need in order to decide between them.
+
+Rules:
+- Never add a fact. If the brief is thin, that is a finding, not a gap to fill.
+- Never soften a CUT because the writing is good.
+Save your verdict to <span class="pa">&lt;same-path&gt;-review.md</span></pre>
+  </div>
+
+  <h3 style="margin-top:32px;font-size:22px">Step 3 — The handoff</h3>
+  <p>Here is the nuance that matters, and it's worth slowing down for. Each agent's workspace is its <b>default working directory — not a locked sandbox.</b> Relative paths stay inside the workspace; an absolute path can reach outside it. That's why both job descriptions above use an absolute path, <code class="k">~/groundwire/briefs/</code>, that sits outside <em>either</em> workspace.</p>
+
+  <div class="handoff">
+    <div class="hoBox">🔎 main<br><span style="font-weight:400;color:var(--ink3);font-size:11px">researches, drafts</span></div>
+    <div class="hoArr">──▶</div>
+    <div class="hoBox f">~/groundwire/briefs/<br>flood-warning.md</div>
+    <div class="hoArr">──▶</div>
+    <div class="hoBox">🔍 reviewer<br><span style="font-weight:400;color:var(--ink3);font-size:11px">reads cold, judges</span></div>
+    <div class="hoArr">──▶</div>
+    <div class="hoBox f">…-review.md</div>
+  </div>
+
+  <div class="analogy">
+    <div class="ic">🗄️</div>
+    <div><div class="tt">Why a shared folder, not shared memory</div>
+    <p><b>The file is the handoff, and that's a deliberate design choice rather than a limitation.</b> If you gave both agents one shared memory store, the reviewer would start absorbing the researcher's working notes — its half-formed theories, its "this source seems dodgy but let's go with it" — and you'd be right back to marking your own homework. A file is a narrow, inspectable doorway: exactly the finished draft passes through, and nothing else. OpenClaw's own docs make the same argument, recommending separate memory by default with sharing added only where you can point at the reason.</p></div>
+  </div>
+
+  <div class="note pro"><b>The two-terminal demo:</b> run this with two terminal windows side by side on the projector, one per agent, so the room can literally see there is no shared conversation between them. Left window asks <code class="k">main</code> to research; it prints a path. Right window pastes that path to <code class="k">reviewer</code>. The reviewer's very first sight of the topic is the file.</div>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal — the full round trip</span></div>
+<pre><span class="pr">$</span> openclaw --agent main "Research how flood early-warning
+    systems are funded in Indian cities. Brief only."
+<span class="ok">✓</span> wrote <span class="pa">~/groundwire/briefs/flood-warning-funding.md</span>
+
+<span class="pr">$</span> openclaw --agent reviewer "Review
+    ~/groundwire/briefs/flood-warning-funding.md"
+<span class="ok">✓</span> wrote <span class="pa">~/groundwire/briefs/flood-warning-funding-review.md</span>
+
+<span class="pr">$</span> cat ~/groundwire/briefs/flood-warning-funding-review.md
+KEEP  central scheme funding, named in source 2
+<span class="wn">FLAG</span>  "most cities" - source 1 says most, source 3 says a third
+<span class="wn">FLAG</span>  2024 figure - source 2 is quoting a 2021 report
+<span class="cm">CUT</span>   "widely considered successful" - no source states this</pre>
+  </div>
+
+  <div class="note beg"><b>Beginner Note — flags are the point, not a failure.</b> A review that comes back with nothing flagged usually means the reviewer isn't reviewing. When your reviewer produces all KEEPs on the first run, don't celebrate — suspect the instructions. The most common cause is an <code class="k">AGENTS.md</code> that describes the reviewer as "helpful", which quietly pushes it toward agreeing with you.</div>
+
+  <div class="card">
+    <h4>The other shape: orchestrator + sub-agents <span style="font-size:13px;color:var(--ink3);font-weight:400">— concept only, we are not building this</span></h4>
+    <p>What you just built is a fixed pipeline: you decide the order. OpenClaw also supports the dynamic version, where one agent spawns others at runtime by calling a <code class="k">sessions_spawn</code> tool, and you can inspect who spawned whom with <code class="k">openclaw agents list --tree</code>. Agents created that way are marked as agent-created and need operator approval before they run.</p>
+    <p style="margin-top:10px"><b>We're not building it today, for a reason worth stating plainly.</b> A spawning orchestrator is genuinely harder to debug: when the output is wrong you now also have to work out which agents existed, why the manager decided to create them, and what each was told. Build the fixed pipeline first. Reach for orchestration when you can name a job where you honestly don't know the sub-tasks until you've read the request — and if you can't name one, you don't need it yet.</p>
+  </div>
+
+  <div class="sim" id="sim3">
+    <h3>⚡ Simulator 3 — You Are the Reviewer</h3>
+    <p class="simSub">Three sources. They don't agree. Judge each claim in the draft brief — KEEP, FLAG, or CUT — and watch the brief rewrite itself as you go. Then compare with what the reviewer agent produced.</p>
+    <div class="srcGrid" id="s3Src"></div>
+    <div id="s3Claims"></div>
+    <div class="briefOut" id="s3Brief"></div>
+    <div class="verdict" id="s3V" style="display:none"></div>
+    <div style="margin-top:12px"><button class="btn ghost sm" id="s3Reset">↺ Reset</button></div>
+  </div>
+
+  <div class="quiz" id="q3">
+    <p class="q">A team gives the researcher and the reviewer one shared memory store, "so the reviewer has full context." What breaks?</p>
+    <div class="opt" data-c="0"><span class="ab">A</span><span>Nothing — more context always produces a better review.</span></div>
+    <div class="opt" data-c="0"><span class="ab">B</span><span>The two agents will overwrite each other's files and crash the gateway.</span></div>
+    <div class="opt" data-c="1"><span class="ab">C</span><span>The reviewer inherits the researcher's reasoning, so it judges the draft against the same assumptions that produced it.</span></div>
+    <div class="opt" data-c="0"><span class="ab">D</span><span>Nothing breaks, but it uses twice the disk space.</span></div>
+    <div class="quizWhy"><b>Answer: C.</b> The reviewer's value is that it arrives cold. Once it can read the researcher's working notes, a shaky claim no longer looks shaky — it arrives pre-justified, wrapped in the reasoning that produced it, and reads as settled. You've rebuilt the single-agent setup with extra steps and a more confident tone. This is why OpenClaw isolates agent memory by default and treats sharing as the exception you have to argue for. And note what the wrong answers get wrong: nothing technical fails here (B, D). That's what makes it dangerous — the system keeps working perfectly while quietly producing worthless reviews.</div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: N8N HANDS ============ -->
+<section class="blk" id="hands"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 5</span><h2>Giving It Hands — the n8n Webhook</h2><span class="secTime">⏱ 10 min</span></div>
+  <p class="secLede">The reviewer's verdict is a file on Zara's laptop. Priya can't read it there. This is the last hop — and it's the one where credentials matter.</p>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/972/original/6.jpeg?1777292479" alt="Why split reasoning and execution between OpenClaw and n8n">
+    <div class="svgCap">Thinking and doing are different jobs, and they want different tools.</div>
+  </div>
+
+  <div class="card">
+    <h4>Three reasons to hand the last step to n8n</h4>
+    <table class="tbl">
+      <tr><th>Reason</th><th>What it means here</th></tr>
+      <tr><td>🔒 Credentials stay put</td><td>Groundwire's Google account lives in n8n, not in the agent. If someone talks the agent into something stupid, the worst it can do is call a webhook. It has no way to read the newsroom's mail.</td></tr>
+      <tr><td>⚡ Don't pay a model to do plumbing</td><td>Creating a Google Doc is an API call with a known shape. There is no reasoning in it. Every token spent on it is wasted.</td></tr>
+      <tr><td>✅ Same input, same output</td><td>An n8n workflow does the identical thing every run. Model output varies by design. Put the parts that must not vary where they can't.</td></tr>
+    </table>
+  </div>
+
+  <div class="defBox">
+    <div class="term">Webhook</div>
+    <p>A URL that does something when data is posted to it. You hand the address out; whoever has it can drop a package there. Our agent finishes a review and posts the result to n8n's address — <b>it doesn't need to know, or be trusted with, what happens next.</b></p>
+  </div>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/973/original/img2.png?1777292666" alt="OpenClaw plus n8n architecture">
+    <div class="svgCap">Agent reasons, webhook carries, n8n acts — with the credentials on the far side of the wall.</div>
+  </div>
+
+  <ol class="verifySteps">
+    <li>In n8n (your instance from Class 11, or a free cloud account), add a <b>Webhook</b> node. Method <code>POST</code>. Copy the URL it gives you.</li>
+    <li>Add a <b>Google Docs → Create Document</b> node. Title: <code>Review: {{ $json.topic }}</code>. Content: <code>{{ $json.verdict }}</code>.</li>
+    <li>Add a <b>Gmail → Send Email</b> node addressed to Priya, so the sub-editor's verdict reaches an actual sub-editor.</li>
+    <li>Add a <b>Respond to Webhook</b> node so the agent gets a confirmation back rather than silence.</li>
+    <li><b>Activate</b> the workflow, then test it from a terminal with <code>curl</code> before the agent ever touches it. If the Doc doesn't appear from curl, the agent isn't your problem.</li>
+  </ol>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">test the workflow before wiring the agent</span></div>
+<pre><span class="pr">$</span> curl -X POST https://YOUR-INSTANCE.app.n8n.cloud/webhook/xxxxx \
+    -H "Content-Type: application/json" \
+    -d '{"topic":"test","verdict":"posted from the terminal"}'
+{"status":"success"}</pre>
+  </div>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/197/918/original/1.png?1779279338" alt="The finished n8n workflow">
+    <div class="svgCap">Four nodes. Nothing clever — and that's what makes it the reliable half of the system.</div>
+  </div>
+
+  <p>Then tell the reviewer agent about the address, in its <code class="k">AGENTS.md</code> so it sticks:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">appended to ~/.openclaw/workspace-reviewer/AGENTS.md</span></div>
+<pre>After saving a verdict file, POST it to:
+  https://YOUR-INSTANCE.app.n8n.cloud/webhook/xxxxx
+
+JSON body: { "topic": ..., "verdict": ... }
+Then tell me what came back. If the POST fails, say so plainly.
+Do not retry more than twice.</pre>
+  </div>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says</span>
+    <p>"Look at what we've actually drawn here. The agent has a web search, a filesystem, and one URL. It does not have Groundwire's Google password. It never did, and it never will."</p>
+    <p>"That's not paranoia about this particular agent. It's that you should be able to answer, for anything you build, the question 'what's the worst this can do if it's wrong or if someone plays it?' — and have the answer be short. Here the answer is: it can post nonsense to one webhook. That's a good answer."</p>
+  </div>
+
+  <div class="quiz" id="q4">
+    <p class="q">Why put Google credentials in n8n rather than in the agent, when the agent is running on your own laptop anyway?</p>
+    <div class="opt" data-c="0"><span class="ab">A</span><span>OpenClaw has no way to store credentials.</span></div>
+    <div class="opt" data-c="1"><span class="ab">B</span><span>So that the blast radius of a manipulated or malfunctioning agent stops at "posted junk to a webhook".</span></div>
+    <div class="opt" data-c="0"><span class="ab">C</span><span>Because Google requires credentials to be held by an automation platform.</span></div>
+    <div class="opt" data-c="0"><span class="ab">D</span><span>It's faster, since n8n caches the login.</span></div>
+    <div class="quizWhy"><b>Answer: B.</b> Least privilege: each component holds only what it strictly needs. The agent needs the <em>ability to trigger</em> the email — not the ability to <em>read the mailbox</em>, and those are very different powers that a stored password would bundle together. "It's my own laptop" isn't the safeguard people think it is, either: the risk isn't someone stealing the machine, it's the agent reading a web page that contains instructions aimed at it. Narrow the permissions and that stops being a crisis.</div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: TRADEOFFS ============ -->
+<section class="blk" id="tradeoffs"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 6</span><h2>When Two Agents Is the Wrong Answer</h2><span class="secTime">⏱ 14 min</span></div>
+  <p class="secLede">The section every multi-agent tutorial leaves out. You've just built one — now here's when not to.</p>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says — say this exactly</span>
+    <p>"Multi-agent is the most over-applied idea in this entire course. It's genuinely useful, and it sounds impressive in a demo, and those two facts together mean people reach for it constantly for jobs that a single prompt would have done better, faster, and more reliably."</p>
+    <p>"So here's the rule I want you to leave with. <em>Every agent you add is a handoff, and every handoff is a place where meaning gets lost and something can break.</em> You need to be able to say what the second agent is buying you. If the answer is 'separation' — like Priya's reviewer — that's a real answer. If the answer is 'it felt more organised', you've bought yourself latency and a bigger bill."</p>
+  </div>
+
+  <div class="realGrid">
+    <div class="realCard">
+      <div class="rtag">✗ Not justified</div>
+      <h4>"Summariser agent" → "formatter agent"</h4>
+      <p>Two agents for what is genuinely one instruction. <b>Twice the latency, twice the calls, and a new failure mode</b> — the formatter misreading the summariser — bought for nothing. One prompt with two numbered steps does this better.</p>
+    </div>
+    <div class="realCard">
+      <div class="rtag">✗ Not justified</div>
+      <h4>A "manager agent" over two fixed steps</h4>
+      <p>If the order never changes, you don't need something deciding the order at runtime. <b>You've replaced a reliable arrow with a coin flip</b> and paid a model call for the privilege.</p>
+    </div>
+    <div class="realCard" style="border-color:#5fe08a3a">
+      <div class="rtag" style="color:var(--green)">✓ Justified</div>
+      <h4>Writer → reviewer (today's build)</h4>
+      <p>The second agent exists <b>precisely because it must not see</b> what the first one saw. Context separation isn't a side effect here; it's the entire product. No single-prompt version gets you this.</p>
+    </div>
+    <div class="realCard" style="border-color:#5fe08a3a">
+      <div class="rtag" style="color:var(--green)">✓ Justified</div>
+      <h4>Different tools, different permissions</h4>
+      <p>One agent may read the newsroom's inbox; another may publish to the site. <b>Splitting them keeps a mistake in one from becoming a mistake in the other</b> — the same argument as putting credentials in n8n.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>The three costs, stated plainly</h4>
+    <table class="tbl">
+      <tr><th>Cost</th><th>How it grows</th><th>The bit people forget</th></tr>
+      <tr><td>Money</td><td>Roughly linear — each agent is its own model calls</td><td>The handoff isn't free either: agent two re-reads the whole draft as input every single time.</td></tr>
+      <tr><td>Latency</td><td>Additive in a pipeline — the stages can't overlap</td><td>A review that takes 40 seconds is fine nightly, and unusable in a live chat.</td></tr>
+      <tr><td>Reliability</td><td><b>Multiplicative</b> — and this is the one that bites</td><td>Four steps at 95% each is 81% end-to-end, not 95%. Nobody plans for that number.</td></tr>
+    </table>
+  </div>
+
+  <div class="sim" id="sim4">
+    <h3>⚡ Simulator 4 — The Over-Delegation Board</h3>
+    <p class="simSub">Six real asks land in Groundwire's queue. Route each one. <b>Scored against you for reaching for a second agent when one would have done.</b></p>
+    <div class="askBoard" id="s4Board"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+      <button class="btn sm" id="s4Judge">⚖ Score my routing</button>
+      <button class="btn ghost sm" id="s4Reset">↺ Reset</button>
+    </div>
+    <div class="verdict" id="s4V" style="display:none"></div>
+  </div>
+
+  <div class="sim" id="sim5">
+    <h3>⚡ Simulator 5 — What Each Extra Agent Costs</h3>
+    <p class="simSub">Step the pipeline from one agent to five and watch all three meters at once. Reliability is the one to keep your eye on.</p>
+    <div class="stepperRow">
+      <div class="stepperGroup"><span>Agents in the pipeline</span>
+        <div><button class="stepperBtn" id="s5Down">−</button><span class="stepperVal" id="s5Val">1</span><button class="stepperBtn" id="s5Up">+</button></div>
+      </div>
+      <div class="stepperGroup"><span>Per-step success rate</span>
+        <div><button class="stepperBtn" id="s5RDown">−</button><span class="stepperVal" id="s5RVal" style="min-width:52px">95%</span><button class="stepperBtn" id="s5RUp">+</button></div>
+      </div>
+    </div>
+    <div class="canvasStrip" id="s5Strip"></div>
+    <div class="grid3">
+      <div class="meter"><div class="mtl"><span>Cost per run</span><span class="mtv" id="s5mC">—</span></div><div class="mtBar"><div class="mtFill o" id="s5fC"></div></div></div>
+      <div class="meter"><div class="mtl"><span>Latency</span><span class="mtv" id="s5mL">—</span></div><div class="mtBar"><div class="mtFill r" id="s5fL"></div></div></div>
+      <div class="meter"><div class="mtl"><span>End-to-end success</span><span class="mtv" id="s5mR">—</span></div><div class="mtBar"><div class="mtFill g" id="s5fR"></div></div></div>
+    </div>
+    <div class="verdict" id="s5V"></div>
+  </div>
+
+  <div class="quiz" id="q5">
+    <p class="q">A five-agent pipeline where each agent succeeds 95% of the time. What fraction of runs complete without any step failing?</p>
+    <div class="opt" data-c="0"><span class="ab">A</span><span>95% — each agent is independently reliable.</span></div>
+    <div class="opt" data-c="1"><span class="ab">B</span><span>About 77% — the per-step rates multiply.</span></div>
+    <div class="opt" data-c="0"><span class="ab">C</span><span>About 19% — 95% divided across five steps.</span></div>
+    <div class="opt" data-c="0"><span class="ab">D</span><span>Can't be estimated without knowing the model.</span></div>
+    <div class="quizWhy"><b>Answer: B.</b> 0.95⁵ ≈ 0.774. A one-in-twenty failure rate per step sounds tolerable right up until you chain five of them and roughly a quarter of your runs are broken. <b>This is the actual argument against casually adding agents</b> — not the money, which is usually small, but the compounding. It's also the argument for the reliability settings you met in Class 15: retries and iteration caps raise each individual step's number, and because these multiply, lifting each step from 95% to 99% takes the five-stage pipeline from 77% to 95%.</div>
+  </div>
+</div></section>
+
+<!-- ============ SECTION: TAKE-HOME ============ -->
+<section class="blk" id="takehome"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 7</span><h2>Take-Home — Build It Yourself</h2><span class="secTime">⏱ 6 min</span></div>
+  <p class="secLede">Three challenges, one per build. Nothing here needs a tool you didn't open today.</p>
+
+  <div class="chalCard">
+    <div class="chalHead"><span class="cn">C1</span><h4>Your own Gem, for something you actually do weekly</h4><span class="chev">▸</span></div>
+    <div class="chalBody">
+      <div class="cLabel">Mission</div>
+      <p class="mission">Pick a task you repeat — reviewing pull requests, writing standup updates, drafting replies to a certain kind of email. Build a Gem for it, with the same four-part shape as the Desk Editor: what to produce, in what order, what to mark as uncertain, and a hard list of things it must never invent.</p>
+      <div class="cLabel">Done when</div>
+      <p class="mission">You've used it three separate times without editing the instructions, and it's on your phone. If you find yourself re-explaining the same thing in every chat, that thing belongs in the Instructions box — go put it there.</p>
+      <div class="cLabel">Stretch</div>
+      <p class="mission">Add a Knowledge file and find one answer that measurably changed because of it.</p>
+    </div>
+  </div>
+
+  <div class="chalCard">
+    <div class="chalHead"><span class="cn">C2</span><h4>Finish the OpenClaw install and teach it about you</h4><span class="chev">▸</span></div>
+    <div class="chalBody">
+      <div class="cLabel">Mission</div>
+      <p class="mission">If the install didn't complete in class, finish it: Node check → install → <code class="k">openclaw onboard --install-daemon</code> → <code class="k">openclaw doctor</code> → <code class="k">openclaw dashboard</code>. Then teach it five true things about how you work, end the session, and come back the next day.</p>
+      <div class="cLabel">Done when</div>
+      <p class="mission">You can open <code class="k">~/.openclaw/workspace/USER.md</code> and read those five things as text — and you've edited one of them by hand, then confirmed in chat that the agent picked up your edit.</p>
+      <div class="cLabel">Stretch</div>
+      <p class="mission"><code class="k">git init</code> the workspace folder and commit it. Your agent's memory now has version history, and you can diff what it learned this week.</p>
+    </div>
+  </div>
+
+  <div class="chalCard">
+    <div class="chalHead"><span class="cn">C3</span><h4>Add a second agent that disagrees with the first</h4><span class="chev">▸</span></div>
+    <div class="chalBody">
+      <div class="cLabel">Mission</div>
+      <p class="mission"><code class="k">openclaw agents add critic</code>. Give it an <code class="k">AGENTS.md</code> whose entire job is to find the weakest claim in whatever it's handed, in a domain you know well enough to judge it. Have agent one write to a shared folder; hand the critic the path.</p>
+      <div class="cLabel">Done when</div>
+      <p class="mission">The critic has caught at least one thing you agree with — and you've written down one thing it flagged that was wrong. Both halves matter. An agent you never disagree with isn't being read carefully.</p>
+      <div class="cLabel">The real question to answer in writing</div>
+      <p class="mission">Two sentences: was the second agent worth it for this job, or would a single well-written prompt have done the same? Say why. <b>Getting to "no, it wasn't worth it" is a completely valid outcome</b> — that judgement is the actual skill this class is teaching.</p>
+    </div>
+  </div>
+
+  <div class="note adv"><b>If you set one of these as graded homework:</b> C1 and C2 are safe for everyone. C3 depends on C2 completing, so either make it optional or pair it with a "describe what you would build" written alternative for anyone whose machine wouldn't cooperate.</div>
+</div></section>
+
+<!-- ============ SECTION: WRAP ============ -->
+<section class="blk" id="wrap"><div class="wrap">
+  <div class="secHead"><span class="secNum">§ 8</span><h2>Wrap-Up — Key Takeaways</h2><span class="secTime">⏱ 6 min</span></div>
+  <p class="secLede">Three agents built, one webhook wired, and — the part that'll matter longest — a rule for when not to.</p>
+
+  <div class="svgWrap">
+    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/974/original/img3.jpeg?1777292822" alt="The full stack built across the course">
+    <div class="svgCap">From "what is a prompt" to a multi-agent system running on your own machine.</div>
+  </div>
+
+  <div class="card">
+    <h4>Six Things You Can Now Do</h4>
+    <table class="tbl">
+      <tr><th>Skill</th><th>What you can now do</th></tr>
+      <tr><td>Gemini Gems</td><td>Ship a reusable personal assistant in ten minutes, free, on web and phone</td></tr>
+      <tr><td>OpenClaw setup</td><td>Install an always-on agent, wire it to a free Gemini key, and verify it with <code class="k">doctor</code></td></tr>
+      <tr><td>Memory you own</td><td>Read, edit, and version-control an agent's memory as plain Markdown</td></tr>
+      <tr><td>Two-agent pipeline</td><td>Add a second agent with its own workspace and hand work over through a file</td></tr>
+      <tr><td>Credential isolation</td><td>Keep the powerful logins in n8n and give the agent only a URL</td></tr>
+      <tr><td>Knowing when not to</td><td>Say out loud what a second agent buys — and drop it when the answer is nothing</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Key Takeaways</h3>
+    <p><b>Personal, private, and always-on are three different things.</b> A Gem is personal. OpenClaw is personal and private and always-on. Knowing which one a job needs saves you an install you didn't have to do.</p>
+    <p><b>Memory as files is the whole argument for running it yourself.</b> You can read why it believes something, fix it with a text editor, and put it in git. None of that is possible with memory you can't open.</p>
+    <p><b>The separation <em>is</em> the multi-agent system.</b> Two prompts in one conversation is not two agents. If the reviewer can see the writer's reasoning, it isn't reviewing.</p>
+    <p><b>A file makes a better handoff than shared memory.</b> A narrow, inspectable doorway that passes exactly the finished draft — and none of the working notes that would contaminate the review.</p>
+    <p><b>Reliability multiplies, and that's the real cost of another agent.</b> 0.95⁵ ≈ 77%. Money and latency you can budget for. Compounding failure is the one that surprises people.</p>
+    <p><b>Give the agent the trigger, not the keys.</b> Its worst possible day should be short to describe. Ours: it posts junk to one webhook.</p>
+  </div>
+
+  <div class="card" style="border-color:#3dd6c344">
+    <h4 style="color:var(--teal)">Groundwire — Monday, 6:15 PM</h4>
+    <p style="font-size:14.5px">Advait files from the field on his phone, through a Gem, and the note that lands on the desk is already in house style. Zara's agent is still running with the laptop shut. And Priya gets her first machine-written review: four claims kept, two flagged, one cut for having no source at all. She checks the cut one herself. It was right.</p>
+    <p style="font-size:14.5px;margin-top:12px">Then Advait, reading over her shoulder, asks the obvious thing: <em>"Hang on — the reviewer is the same model as the writer. Same brain, same blind spots. Who's checking the checker?"</em></p>
+    <p style="font-size:13.5px;color:var(--ink3);margin-top:10px">Nobody in the room has an answer. Priya notes that she's only trusting today's review because she went and verified it by hand — which is fine for one brief and useless as a system. Next class: how you actually measure whether any of this is working, instead of spot-checking and hoping.</p>
+  </div>
+
+  <div class="bigQuote">"Adding a second agent is easy. Being able to say what it bought you <em>is</em> the job."</div>
+
+  <div class="say">
+    <span class="who">🎙 Instructor Says — Closing</span>
+    <p>"You built three agents today and the one I care most about is the one you didn't build — the manager agent in §4 that we deliberately left as a concept. Almost every team that gets excited about multi-agent systems builds that thing first, and then spends a month debugging why it sometimes spawns four researchers for a one-line question."</p>
+    <p>"Fixed pipeline first. Second agent only when you can name what the separation buys. And when you demo this to someone, show them the review with the flags in it — not the clean run. The flags are the product."</p>
+  </div>
+</div></section>
+
+<div class="footer"><div class="wrap">
+  <p>Scaler AIML · Class 16 — Personal Agents &amp; Multi-Agent Systems: Your Own Agent, and a Second Opinion · Groundwire Edition</p>
+  <p style="margin-top:8px">OpenClaw (install, <code class="k">onboard</code>, <code class="k">doctor</code>, <code class="k">dashboard</code>, <code class="k">agents add</code>, workspace paths) · Gemini Gems · Gemini API free tier · n8n webhook — all verified against current documentation, August 2026 · <b>OpenClaw ships very fast and Gemini's free-tier limits have moved repeatedly; re-verify commands, wizard wording, and quotas before you teach this live.</b></p>
+</div></div>
+
+<script>
+/* progress bar + hero counters */
+addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressBar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%'});
+document.querySelectorAll('.hstat .n').forEach(el=>{const t=+el.dataset.count;if(t===0){el.textContent='0';return;}let c=0;const iv=setInterval(()=>{c+=Math.max(1,Math.round(t/30));if(c>=t){c=t;clearInterval(iv);}el.textContent=c;},40)});
+
+/* quizzes */
+document.querySelectorAll('.quiz').forEach(q=>{const opts=q.querySelectorAll('.opt');
+ opts.forEach(o=>o.addEventListener('click',()=>{opts.forEach(x=>{x.classList.add('locked');if(x.dataset.c==='1')x.classList.add('correct')});
+  if(o.dataset.c!=='1')o.classList.add('wrong');q.querySelector('.quizWhy').classList.add('show');}));});
+
+/* challenge accordion cards */
+document.querySelectorAll('.chalHead').forEach(h=>h.addEventListener('click',()=>h.closest('.chalCard').classList.toggle('open')));
+
+/* ===== SIM 1: One Agent vs Two, side by side ===== */
+(()=>{
+const JOBS=[
+ {k:'brief',l:'Brief on how flood-warning systems get funded',
+  a:{t:22,c:4,q:0,steps:['reads the request','searches the web','reads 4 sources','writes the brief','declares it ready']},
+  b:{t:41,c:9,q:3,steps:['researcher reads the request','searches the web','reads 4 sources','writes the brief','saves to the shared folder','reviewer opens the file cold','checks each claim against its source','flags 2, cuts 1']},
+  v:'good',
+  vt:'<b>Worth it.</b> Lane A shipped three claims nobody could support &mdash; and it said so with total confidence, because from inside its own reasoning those claims looked fine. Lane B cost roughly double in time and calls and caught all three. On something going out under Groundwire&rsquo;s name, that is an easy trade.'},
+ {k:'tidy',l:'Tidy a 200-word field note into 90 words of house style',
+  a:{t:6,c:1,q:0,steps:['reads the note','rewrites to 90 words','returns it']},
+  b:{t:19,c:4,q:0,steps:['writer reads the note','rewrites to 90 words','saves to the shared folder','reviewer opens the file cold','checks each claim','finds nothing to flag']},
+  v:'bad',
+  vt:'<b>Not worth it.</b> The reviewer found nothing &mdash; not because it was lazy, but because there was nothing to find. No new facts entered the text; it was the same facts, shorter. Three times the wait and four times the calls bought a clean bill of health on work that was never at risk. <b>This is the most common way people waste a second agent.</b>'},
+ {k:'check',l:'Check one claim against a document Priya already verified',
+  a:{t:11,c:2,q:1,steps:['reads the claim','opens the document','compares and answers']},
+  b:{t:26,c:6,q:1,steps:['agent one reads the claim','opens the document','writes its comparison out','saves to the shared folder','reviewer opens the file cold','re-reads the same document','reaches the same conclusion']},
+  v:'mid',
+  vt:'<b>A wash &mdash; and worth sitting with.</b> Both lanes caught the same single discrepancy, because the ground truth was already a verified document. Separation buys you nothing when there is a document to check against; it buys you a lot when there is only a judgement call. <b>The question is never &ldquo;is two agents better&rdquo; &mdash; it is &ldquo;is there anything here for a second reader to see.&rdquo;</b>'}
+];
+let cur=JOBS[0],timer=null;
+const pick=document.getElementById('s1Job'),sA=document.getElementById('s1StepsA'),sB=document.getElementById('s1StepsB');
+const clA=document.getElementById('s1ClockA'),clB=document.getElementById('s1ClockB');
+const laneA=document.getElementById('s1LaneA'),laneB=document.getElementById('s1LaneB'),vd=document.getElementById('s1V');
+const drawSteps=(el,steps)=>{el.innerHTML='';steps.forEach(s=>{const d=document.createElement('div');d.className='lStep';d.innerHTML='<span class="lsi">&#9679;</span><span>'+s+'</span>';el.appendChild(d);});};
+const meters=(on)=>{
+ const set=(mv,fv,txt,pct)=>{document.getElementById(mv).textContent=txt;document.getElementById(fv).style.width=pct+'%';};
+ if(!on){['s1mT','s1mC','s1mQ'].forEach(i=>document.getElementById(i).textContent='—');['s1fT','s1fC','s1fQ'].forEach(i=>document.getElementById(i).style.width='0%');return;}
+ set('s1mT','s1fT','A '+cur.a.t+'s · B '+cur.b.t+'s',Math.min(100,cur.b.t/50*100));
+ set('s1mC','s1fC','A '+cur.a.c+' · B '+cur.b.c,Math.min(100,cur.b.c/12*100));
+ set('s1mQ','s1fQ','A '+cur.a.q+' · B '+cur.b.q,Math.min(100,cur.b.q/3*100));
+};
+const reset=()=>{if(timer)clearInterval(timer);timer=null;drawSteps(sA,cur.a.steps);drawSteps(sB,cur.b.steps);
+ clA.textContent='0.0s';clB.textContent='0.0s';laneA.classList.remove('win');laneB.classList.remove('win');vd.style.display='none';meters(false);};
+const renderPick=()=>{pick.innerHTML='';JOBS.forEach(j=>{const b=document.createElement('button');b.className='pickBtn'+(j.k===cur.k?' on':'');b.textContent=j.l;
+ b.onclick=()=>{cur=j;reset();};pick.appendChild(b);});};
+const run=()=>{
+ if(timer)clearInterval(timer);
+ drawSteps(sA,cur.a.steps);drawSteps(sB,cur.b.steps);vd.style.display='none';laneA.classList.remove('win');laneB.classList.remove('win');
+ const TMAX=Math.max(cur.a.t,cur.b.t),D=4200,t0=Date.now();
+ const tick=()=>{
+  const p=Math.min(1,(Date.now()-t0)/D),simT=p*TMAX;
+  const upd=(job,el,clock)=>{const done=Math.min(job.t,simT);clock.textContent=done.toFixed(1)+'s';
+   const n=job.steps.length,rows=el.querySelectorAll('.lStep');
+   rows.forEach((r,i)=>{if(done>=job.t*(i+1)/n-0.001)r.classList.add('on');});};
+  upd(cur.a,sA,clA);upd(cur.b,sB,clB);
+  if(p>=1){clearInterval(timer);timer=null;meters(true);
+   if(cur.v==='good'){laneB.classList.add('win');vd.className='verdict good';}
+   else if(cur.v==='bad'){laneA.classList.add('win');vd.className='verdict bad';}
+   else{vd.className='verdict mid';}
+   vd.innerHTML=cur.vt;vd.style.display='block';}
+ };
+ timer=setInterval(tick,40);tick();
+};
+document.getElementById('s1Run').onclick=run;
+document.getElementById('s1Reset').onclick=reset;
+renderPick();reset();
+})();
+
+/* ===== SIM 2: The Memory Ledger ===== */
+(()=>{
+const MSGS=[
+ {l:'"I’m Zara, I produce for Groundwire."',gem:'told us her name and role',oc:{k:'who',v:'<b>Name:</b> Zara &mdash; producer, Groundwire'}},
+ {l:'"I write in short sentences — never over 20 words."',gem:'stated a style preference',oc:{k:'style',v:'<b>Style:</b> short sentences, max 20 words'}},
+ {l:'"What’s 12% of 4,300?"',gem:'asked an arithmetic question',oc:null,note:'not written to file &mdash; a task, not a fact about you'},
+ {l:'"We publish Tuesdays and Fridays."',gem:'gave the publishing schedule',oc:{k:'sched',v:'<b>Publishes:</b> Tuesdays and Fridays'}},
+ {l:'"Correction — it’s Thursdays now, not Fridays."',gem:'corrected the schedule',oc:{k:'sched',v:'<b>Publishes:</b> Tuesdays and Thursdays <span style="color:var(--ink3)">(corrected)</span>'}},
+ {l:'"Draft me a headline for the pump story."',gem:'asked for a headline',oc:null,note:'not written to file &mdash; a task, not a fact about you'}
+];
+let sent=[],closed=false;
+const pills=document.getElementById('s2Pills'),gemEl=document.getElementById('s2Gem'),ocEl=document.getElementById('s2OC'),vd=document.getElementById('s2V');
+const render=()=>{
+ pills.innerHTML='';
+ MSGS.forEach((m,i)=>{const b=document.createElement('button');b.className='msgPill'+(sent.indexOf(i)>-1?' sel':'');b.innerHTML=m.l;
+  b.onclick=()=>{if(sent.indexOf(i)>-1||closed)return;sent.push(i);render();};pills.appendChild(b);});
+ if(closed){gemEl.innerHTML='<div class="memFact empty">session ended &mdash; every line above is gone</div>';}
+ else if(!sent.length){gemEl.innerHTML='<div class="memFact empty">nothing yet</div>';}
+ else{gemEl.innerHTML='';sent.forEach(i=>{const d=document.createElement('div');d.className='memFact';d.innerHTML='&bull; '+MSGS[i].gem;gemEl.appendChild(d);});}
+ const file={};let notes=[];
+ sent.forEach(i=>{const m=MSGS[i];if(m.oc)file[m.oc.k]=m.oc.v;else if(m.note&&notes.indexOf(m.note)<0)notes.push(m.note);});
+ const keys=Object.keys(file);
+ if(!keys.length&&!notes.length){ocEl.innerHTML='<div class="memFact empty">file not created yet</div>';}
+ else{ocEl.innerHTML='';keys.forEach(k=>{const d=document.createElement('div');d.className='memFact';d.innerHTML=file[k];ocEl.appendChild(d);});
+  notes.forEach(n=>{const d=document.createElement('div');d.className='memFact empty';d.innerHTML=n;ocEl.appendChild(d);});}
+ if(closed){
+  vd.className='verdict '+(keys.length?'good':'mid');
+  vd.innerHTML=keys.length
+   ? '<b>'+keys.length+' fact'+(keys.length===1?'':'s')+' survived on disk.</b> The Gem lane is empty &mdash; not deleted, just never written anywhere in the first place. Notice two things about the surviving file. It <b>filtered</b>: questions and task requests never became memory, only durable facts about you did. And it <b>corrected in place</b> &mdash; the Friday line was replaced, not appended, so the file doesn’t contradict itself. That file is <code class="k">~/.openclaw/workspace/USER.md</code>, and you can open it in any text editor and fix that line by hand.'
+   : '<b>Nothing survived, on either side.</b> You closed the session before telling it anything durable. Reset and try sending the first two messages before closing &mdash; the difference only shows up once there is something worth keeping.';
+  vd.style.display='block';
+ } else {vd.style.display='none';}
+};
+document.getElementById('s2Close').onclick=()=>{closed=true;render();};
+document.getElementById('s2Reset').onclick=()=>{sent=[];closed=false;render();};
+render();
+})();
+
+/* ===== SIM 3: You Are the Reviewer ===== */
+(()=>{
+const SRC=[
+ {n:'Source 1 · Municipal Finance Review (2021)',t:'&ldquo;Roughly a third of the cities surveyed drew flood-warning funding from central schemes.&rdquo;'},
+ {n:'Source 2 · State disaster authority note (2024)',t:'&ldquo;Most cities in the state now access the central scheme for early-warning infrastructure.&rdquo;'},
+ {n:'Source 3 · Interview, city engineer',t:'&ldquo;Our sensors have been up since 2019. The money is renewed annually and we never know until it lands.&rdquo;'}
+];
+const CLAIMS=[
+ {t:'Most Indian cities fund flood-warning systems through central schemes.',a:'flag',
+  w:'<b>FLAG.</b> Source 1 says a third; Source 2 says most. They also aren’t measuring the same thing &mdash; one is a national survey, one is a single state, three years apart. Neither is lying, and that is exactly why this is a flag rather than a cut: a reader needs to know which population and which year before this sentence means anything.'},
+ {t:'Sensor networks in this city have been running since 2019.',a:'keep',
+  w:'<b>KEEP.</b> Source 3 states it directly, first-hand, and nothing contradicts it.'},
+ {t:'Funding is renewed annually and is not guaranteed.',a:'keep',
+  w:'<b>KEEP.</b> Straight from Source 3 &mdash; and it is the engineer’s own operational reality, which is the strongest kind of source for this particular claim.'},
+ {t:'The 2021 figure is the most current data available.',a:'cut',
+  w:'<b>CUT.</b> A 2024 note is sitting in the same source pile. This isn’t a matter of interpretation &mdash; the brief’s own evidence disproves it.'},
+ {t:'The programme is widely considered a success.',a:'cut',
+  w:'<b>CUT.</b> No source says this. Not a weak version of it, not a partial version &mdash; none. <b>This is the sentence type to train your eye on:</b> agreeable, unattributed, and completely unsupported. It reads like a conclusion because it is written in the voice of one.'}
+];
+const LBL={keep:'KEEP',flag:'FLAG',cut:'CUT'};
+let ans={};
+const srcEl=document.getElementById('s3Src'),clEl=document.getElementById('s3Claims'),brEl=document.getElementById('s3Brief'),vd=document.getElementById('s3V');
+srcEl.innerHTML='';SRC.forEach(s=>{const d=document.createElement('div');d.className='srcCard';d.innerHTML='<div class="scn">'+s.n+'</div><p>'+s.t+'</p>';srcEl.appendChild(d);});
+const brief=()=>{
+ brEl.innerHTML='<div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">The brief, as your decisions leave it</div>';
+ CLAIMS.forEach((c,i)=>{const s=document.createElement('span');const a=ans[i];
+  s.className='bl'+(a==='keep'?' kept':a==='flag'?' flag':a==='cut'?' cut':'');
+  s.innerHTML=(a==='flag'?'&#9873; ':a==='cut'?'&#10007; ':a==='keep'?'&#10003; ':'&bull; ')+c.t;brEl.appendChild(s);});
+};
+const render=()=>{
+ clEl.innerHTML='';
+ CLAIMS.forEach((c,i)=>{
+  const d=document.createElement('div');const a=ans[i];
+  d.className='claimRow'+(a?' done '+(a===c.a?'right':'miss'):'');
+  let btns='';['keep','flag','cut'].forEach(k=>{btns+='<button class="crBtn'+(a===k?' sel':'')+'" data-i="'+i+'" data-k="'+k+'">'+LBL[k]+'</button>';});
+  d.innerHTML='<div class="crt">'+c.t+'</div><div class="crBtns">'+btns+'</div><div class="crWhy">'+(a?(a===c.a?'':'<span style="color:var(--rose)">You said '+LBL[a]+'. </span>')+c.w:'')+'</div>';
+  clEl.appendChild(d);
+ });
+ clEl.querySelectorAll('.crBtn').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(ans[i])return;ans[i]=b.dataset.k;render();});
+ brief();
+ const done=Object.keys(ans).length;
+ if(done===CLAIMS.length){
+  let right=0;CLAIMS.forEach((c,i)=>{if(ans[i]===c.a)right++;});
+  vd.className='verdict '+(right>=4?'good':right>=3?'mid':'bad');
+  vd.innerHTML='<b>'+right+' of 5 matched the reviewer agent.</b> '+(
+   right===5?'Exactly the verdict our reviewer produced &mdash; two keeps, one flag, two cuts. Which is the point worth taking away: a reviewer agent is not doing anything mystical. It is doing what you just did, in eight seconds, on a brief you did not write and have no attachment to.'
+   :right>=3?'Close. The two that separate careful reviewers from fast ones are the flag and the &ldquo;widely considered a success&rdquo; line &mdash; the first because it is tempting to just pick the newer source and move on, the second because it is so easy to read past.'
+   :'Worth a second pass. The trap is treating &ldquo;a source disagrees&rdquo; and &ldquo;no source exists&rdquo; as the same problem. They aren’t: a conflict is information a reader needs, and gets a FLAG. An unsupported sentence is just decoration, and gets a CUT.')
+   +' <b>And notice what a reviewer never does:</b> nowhere in this exercise did you go and look something up. Adding facts is the researcher’s job. Yours was only to judge what was in front of you.';
+  vd.style.display='block';
+ } else {vd.style.display='none';}
+};
+document.getElementById('s3Reset').onclick=()=>{ans={};render();};
+render();
+})();
+
+/* ===== SIM 4: The Over-Delegation Board ===== */
+(()=>{
+const OPTS=[{k:'one',l:'One agent'},{k:'two',l:'Two agents (writer → reviewer)'},{k:'flow',l:'Not an agent — an n8n workflow'}];
+const ASKS=[
+ {q:'Turn Advait’s 200-word field note into 90 words of house style.',a:'one',
+  w:'One agent. No new facts enter, nothing needs judging &mdash; a reviewer here has nothing to review.'},
+ {q:'Research whether the pump-station claim holds up, for publication under our name.',a:'two',
+  w:'Two agents. New facts, contested sources, and it goes out publicly. This is the case the second agent exists for.'},
+ {q:'Every morning at 7, email the desk yesterday’s published headlines from a spreadsheet.',a:'flow',
+  w:'A workflow. Fixed input, fixed output, zero judgement. Putting a model in this loop adds cost and a way for it to go wrong.'},
+ {q:'Give me six alternative headlines for this story.',a:'one',
+  w:'One agent. You are the reviewer &mdash; you are going to read all six and pick one anyway.'},
+ {q:'Draft the correction notice for a story we got wrong. Nothing goes out without a second read.',a:'two',
+  w:'Two agents. High stakes, and the brief literally specifies a second reader. Structure it that way rather than promising to be careful.'},
+ {q:'When the tip form is submitted, save it to a Sheet and post it to the desk channel.',a:'flow',
+  w:'A workflow. Move data from A to B and C. There is no thinking in it at all.'}
+];
+let ans={};
+const board=document.getElementById('s4Board'),vd=document.getElementById('s4V');
+const render=(judged)=>{
+ board.innerHTML='';
+ ASKS.forEach((k,i)=>{
+  const d=document.createElement('div');const a=ans[i];
+  let cls='askCard';
+  if(judged){cls+=' judged '+(a===k.a?'good':(a==='two'?'over':'bad'));}
+  d.className=cls;
+  let btns='';OPTS.forEach(o=>{btns+='<button class="acBtn'+(a===o.k?' sel':'')+'" data-i="'+i+'" data-k="'+o.k+'">'+o.l+'</button>';});
+  d.innerHTML='<div class="acq">'+k.q+'</div><div class="acBtns">'+btns+'</div><div class="acWhy">'+(judged?(a===k.a?'&#10003; ':'&#10007; ')+k.w:'')+'</div>';
+  board.appendChild(d);
+ });
+ board.querySelectorAll('.acBtn').forEach(b=>b.onclick=()=>{ans[+b.dataset.i]=b.dataset.k;render(false);vd.style.display='none';});
+};
+document.getElementById('s4Judge').onclick=()=>{
+ if(Object.keys(ans).length<ASKS.length){vd.className='verdict mid';vd.innerHTML='<b>Route all six first.</b> '+(ASKS.length-Object.keys(ans).length)+' still unassigned.';vd.style.display='block';return;}
+ let right=0,over=0,under=0;
+ ASKS.forEach((k,i)=>{if(ans[i]===k.a)right++;else if(ans[i]==='two')over++;else if(k.a==='two')under++;});
+ render(true);
+ let msg='<b>'+right+' of 6 correct.</b> ';
+ if(over>0)msg+='<b>Over-delegated '+over+'.</b> Each of those buys you extra latency and extra model calls for a job where the second agent had nothing to add. This is the failure mode this sim is built to catch, and it is by far the common one in real teams. ';
+ if(under>0)msg+='<b>Under-protected '+under+'</b> &mdash; a job that genuinely needed a separate second reader got a single agent. That is the rarer mistake, and the more expensive one when it shows up in print. ';
+ if(over===0&&under===0&&right===6)msg+='Clean sweep &mdash; and notice the shape of the answer key: <b>only two of six jobs justified a second agent, and two weren’t agent jobs at all.</b> That ratio is roughly what honest triage looks like.';
+ else msg+='The rule of thumb: <b>a second agent is for judgement that must be independent.</b> If there is no judgement, it is a workflow. If the judgement doesn’t need independence, it is one agent.';
+ vd.className='verdict '+(right>=5?'good':right>=3?'mid':'bad');vd.innerHTML=msg;vd.style.display='block';
+};
+document.getElementById('s4Reset').onclick=()=>{ans={};render(false);vd.style.display='none';};
+render(false);
+})();
+
+/* ===== SIM 5: What Each Extra Agent Costs ===== */
+(()=>{
+const RATES=[90,95,99];
+let n=1,ri=1;
+const strip=document.getElementById('s5Strip'),vd=document.getElementById('s5V');
+const render=()=>{
+ document.getElementById('s5Val').textContent=n;
+ document.getElementById('s5RVal').textContent=RATES[ri]+'%';
+ strip.innerHTML='';
+ for(let i=0;i<n;i++){
+  if(i>0){const a=document.createElement('span');a.style.cssText='font-family:var(--mono);color:var(--ink3)';a.textContent='→';strip.appendChild(a);}
+  const d=document.createElement('span');d.className='cNode ok';d.innerHTML='<span class="ci">🤖</span>Agent '+(i+1);strip.appendChild(d);
+ }
+ const calls=n*3,lat=n*14,succ=Math.pow(RATES[ri]/100,n);
+ document.getElementById('s5mC').textContent=calls+' model calls';
+ document.getElementById('s5fC').style.width=(n/5*100)+'%';
+ document.getElementById('s5mL').textContent='~'+lat+'s';
+ document.getElementById('s5fL').style.width=(n/5*100)+'%';
+ document.getElementById('s5mR').textContent=(succ*100).toFixed(1)+'%';
+ document.getElementById('s5fR').style.width=(succ*100)+'%';
+ const f=document.getElementById('s5fR');
+ f.className='mtFill '+(succ>=0.9?'g':succ>=0.75?'o':'r');
+ let t;
+ if(n===1){t='<b>One agent: no handoffs, nothing to lose in translation.</b> This is the baseline every extra agent has to beat, and it is a genuinely strong baseline. Whatever you add next has to earn the gap it opens up here.';}
+ else if(n===2){t='<b>Two agents &mdash; the shape you built today.</b> '+calls+' calls, about '+lat+' seconds, and '+(succ*100).toFixed(1)+'% of runs finish clean. If the second agent is doing real independent judgement, this is a fair price. If it is just reformatting the first one’s output, you have paid it for nothing.';}
+ else if(n<=3){t='<b>Three agents is where you should have to justify yourself.</b> End-to-end success has dropped to '+(succ*100).toFixed(1)+'% &mdash; you are now failing roughly '+Math.round((1-succ)*100)+' runs in every 100, and every one of those needs someone to notice and rerun it.';}
+ else if(succ>=0.9){t='<b>'+n+' agents, and still '+(succ*100).toFixed(1)+'% clean &mdash; because each step is '+RATES[ri]+'%.</b> This is the whole argument for the reliability settings from Class 15. Retries and iteration caps lift each individual step, and because these numbers multiply, a few points per step is worth far more at the end of a long pipeline than at the end of a short one. Drop the per-step rate back to 95% and watch what the same five agents do.';}
+ else {t='<b>'+n+' agents &mdash; look at that success number.</b> '+(succ*100).toFixed(1)+'%. Each individual step still looks perfectly respectable at '+RATES[ri]+'%, and yet roughly '+Math.round((1-succ)*100)+' runs in 100 break somewhere along the chain. <b>Nobody plans for this number, because nobody multiplies.</b> Now raise the per-step rate to 99% and watch the whole pipeline recover &mdash; that is why retries and iteration caps matter more, not less, as pipelines get longer.';}
+ vd.className='verdict '+(succ>=0.9?'good':succ>=0.75?'mid':'bad');vd.innerHTML=t;
+};
+document.getElementById('s5Up').onclick=()=>{if(n<5){n++;render();}};
+document.getElementById('s5Down').onclick=()=>{if(n>1){n--;render();}};
+document.getElementById('s5RUp').onclick=()=>{if(ri<RATES.length-1){ri++;render();}};
+document.getElementById('s5RDown').onclick=()=>{if(ri>0){ri--;render();}};
+render();
+})();
+</script>
+</body>
+</html>

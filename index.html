@@ -509,7 +509,7 @@ pre.code .kw{color:var(--orange2)}
       <tr><td>Skills</td><td>The tools the agent can reach for — web search, reading and writing files</td><td>Writing a file is how our two agents hand work to each other.</td></tr>
       <tr><td>Memory</td><td>Plain Markdown files in a workspace folder on your disk</td><td>Openable, greppable, backup-able. And separate per agent by default.</td></tr>
       <tr><td>Heartbeat</td><td>A scheduler that can wake the agent on a timer</td><td>The answer to Advait's 11:40pm tip.</td></tr>
-      <tr><td>Model (LLM)</td><td>The actual reasoning, reached by API key</td><td>Your free Groq key from Class 15. Swap the key, everything else stays.</td></tr>
+      <tr><td>Model (LLM)</td><td>The actual reasoning, reached by API key</td><td>A free Gemini API key from Google AI Studio. Swap the key, everything else stays.</td></tr>
     </table>
   </div>
 
@@ -637,7 +637,7 @@ Rules you never break:
   <div class="card">
     <h4>What OpenClaw actually is</h4>
     <p>An open-source agent runtime you install on your own computer. It gives you the four things a Gem couldn't: a background service that keeps running, tools that reach your filesystem and the web, memory stored as Markdown files in a folder you own, and — the reason we're here — the ability to run <b>more than one agent</b>, each with its own workspace and its own instructions.</p>
-    <p style="margin-top:10px">You still rent the thinking. The model is reached by an API key — today, the same free <b>Groq</b> key you made in Class 15. What you stop renting is everything around it.</p>
+    <p style="margin-top:10px">You still rent the thinking. The model is reached by an API key — today, a free <b>Gemini</b> key from Google AI Studio. What you stop renting is everything around it.</p>
   </div>
 
   <div class="svgWrap">
@@ -645,15 +645,15 @@ Rules you never break:
     <div class="svgCap">Renting a furnished flat versus owning the place. Both are legitimate choices — they're just different failure modes.</div>
   </div>
 
-  <h3 style="margin-top:36px;font-size:22px">Step 1 — The brain: your free Groq key</h3>
-  <p>If you kept your key from Class 15, you're already done with this step — <b>use the same one.</b> If not, it's two minutes:</p>
+  <h3 style="margin-top:36px;font-size:22px">Step 1 — The brain: your free Gemini key</h3>
+  <p>It's two minutes:</p>
   <ol class="verifySteps">
-    <li>Go to <code>console.groq.com</code> and sign in with email, Google, or GitHub. No credit card.</li>
-    <li>Open <b>API Keys → Create API Key</b>. Copy it — it starts with <code>gsk_</code> and is shown to you exactly once.</li>
+    <li>Go to <code>aistudio.google.com/apikey</code> and sign in with your Google account. No credit card.</li>
+    <li>Click <b>Create API Key</b>. Copy it — it's shown to you exactly once.</li>
     <li>Park it in a notes file for the next five minutes. We'll paste it into one file, not into the wizard.</li>
   </ol>
 
-  <div class="note pro"><b>Why Groq and not a free Gemini API key — read this, it will save your class:</b> a Gem (Build 1) is the consumer Gemini app and has nothing to do with API quotas, so it stays exactly as it is. But the <em>API</em> free tier is a different animal: Google cut free daily request limits sharply in December 2025 and has moved them repeatedly since, and the numbers older tutorials quote are simply gone. The part that catches people out is that <b>one chat message to an agent is not one API call.</b> A single "search this and summarise it" turn is a think call, a tool call, an observe call, and a final answer — four or more requests before the room has finished reading your prompt. On a tight daily free tier, two students can burn the quota during the demo. Groq's free tier is metered <b>per minute</b>, not per day, which means a rate limit there is a sixty-second wait rather than a dead key for the rest of the session. <b>Never quote a specific free-tier number from a script — including this one. Open the provider's own limits page on the day.</b></div>
+  <div class="note pro"><b>Why Gemini and not Groq — read this, it will save your class:</b> Groq is what powered n8n back in Class 15, and it's a fine choice there. Inside OpenClaw specifically, Groq's provider plugin has been returning errors in practice — flaky enough that it isn't worth debugging live in front of a room. Gemini is bundled into OpenClaw with no plugin install at all, which removes a whole failure mode. The trade-off worth knowing: Google cut free daily API request limits sharply in December 2025 and has moved them repeatedly since, and <b>one chat message to an agent is not one API call</b> — a single "search this and summarise it" turn is a think call, a tool call, an observe call, and a final answer, four or more requests before the room has finished reading your prompt. Keep prompts short (§3's survival kit still applies) and open <code class="k">aistudio.google.com/rate-limit</code> on the day to read your own live limits — <b>never quote a specific free-tier number from a script, including this one.</b></div>
 
   <h3 style="margin-top:36px;font-size:22px">Step 2 — Check Node, then install</h3>
   <p>OpenClaw runs on Node.js. Check what you have before installing anything:</p>
@@ -683,22 +683,13 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
   <div class="note adv"><b>Say this out loud when you run the curl line:</b> "Piping a script from the internet straight into a shell is a real thing to be thoughtful about — you're running whatever that URL serves, with your permissions. It's a normal install pattern for developer tools, and it's fine for a project you've chosen to trust, but the habit worth keeping is: know whose domain it is before you pipe it. If that makes you uncomfortable, the npm line does the same job." Don't skip this. Half the room has copy-pasted a curl-to-bash before without ever thinking about it.</div>
 
   <h3 style="margin-top:36px;font-size:22px">Step 3 — Hand it the brain</h3>
-  <p>Groq comes in as a provider plugin — one install command, one restart:</p>
-  <div class="term">
-    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
-<pre><span class="pr">$</span> openclaw plugins install @openclaw/groq-provider
-<span class="ok">✓</span> installed <span class="pa">@openclaw/groq-provider</span>
-
-<span class="pr">$</span> openclaw gateway restart</pre>
-  </div>
-
-  <p>Now put the key where the background service can actually read it — a file called <code class="k">.env</code> inside <code class="k">~/.openclaw/</code>:</p>
+  <p>Gemini support ships bundled with OpenClaw — no plugin to install. Put the key where the background service can actually read it — a file called <code class="k">.env</code> inside <code class="k">~/.openclaw/</code>:</p>
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/.env</span></div>
-<pre>GROQ_API_KEY=gsk_your_key_here</pre>
+<pre>GEMINI_API_KEY=your_key_here</pre>
   </div>
 
-  <div class="note beg"><b>Beginner Note — why a file and not <code class="k">export GROQ_API_KEY=…</code>:</b> anything you type into a terminal window belongs to <em>that window</em> and dies with it. The gateway is a background service started by your operating system, not by your terminal, so it never sees those variables. Putting the key in <code class="k">~/.openclaw/.env</code> is what makes it survive a reboot — which is the entire point of an always-on agent. This is also the single most common "it worked in my terminal but the agent says no API key" bug people hit on day one.</div>
+  <div class="note beg"><b>Beginner Note — why a file and not <code class="k">export GEMINI_API_KEY=…</code>:</b> anything you type into a terminal window belongs to <em>that window</em> and dies with it. The gateway is a background service started by your operating system, not by your terminal, so it never sees those variables. Putting the key in <code class="k">~/.openclaw/.env</code> is what makes it survive a reboot — which is the entire point of an always-on agent. This is also the single most common "it worked in my terminal but the agent says no API key" bug people hit on day one.</div>
 
   <h3 style="margin-top:36px;font-size:22px">Step 4 — Onboard</h3>
   <p>One command starts a wizard. The <code class="k">--install-daemon</code> flag is the part that makes it always-on — it registers the gateway as a background service so it survives you closing the terminal.</p>
@@ -713,9 +704,9 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
     <tr><th>Wizard asks</th><th>Answer</th><th>Why</th></tr>
     <tr><td>Acknowledge risk warning</td><td>Yes</td><td>It's telling you the agent can touch your files. It genuinely can.</td></tr>
     <tr><td>Onboarding mode</td><td>QuickStart</td><td>Minutes instead of a tour.</td></tr>
-    <tr><td>Model provider</td><td><b>Groq</b> — under <b>More…</b> if it isn't on the first screen</td><td>The plugin from Step 3 is what puts it in that list. The provider menu is built from installed plugins, not a fixed list.</td></tr>
-    <tr><td>Auth</td><td>Already found</td><td>It reads <code class="k">GROQ_API_KEY</code> from the <code class="k">.env</code> file. Nothing to paste.</td></tr>
-    <tr><td>Default model</td><td><code class="k">groq/openai/gpt-oss-20b</code></td><td>The small, fast one — same model as Class 15. Plenty for today, and the cheapest thing to hit a rate limit with.</td></tr>
+    <tr><td>Model provider</td><td><b>Gemini</b></td><td>Bundled with OpenClaw — no plugin needed, it's on the first screen.</td></tr>
+    <tr><td>Auth</td><td>Already found</td><td>It reads <code class="k">GEMINI_API_KEY</code> from the <code class="k">.env</code> file. Nothing to paste.</td></tr>
+    <tr><td>Default model</td><td><code class="k">google/gemini-2.5-flash</code></td><td>The small, fast one. Plenty for today, and the cheapest thing to hit a rate limit with.</td></tr>
     <tr><td>Add a channel now?</td><td><b>Skip</b></td><td>This is where Telegram/WhatsApp would go. We're using the built-in browser chat instead.</td></tr>
     <tr><td>Search provider</td><td>DuckDuckGo</td><td>No key required.</td></tr>
     <tr><td>Configure skills now?</td><td>No</td><td>Defaults are enough for today — and fewer skills means a smaller prompt going to the model every turn.</td></tr>
@@ -724,7 +715,7 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
     <tr><td>How to hatch your agent</td><td>Hatch in terminal</td><td>You'll see it come up live.</td></tr>
   </table>
 
-  <div class="note pro"><b>If Groq isn't in the provider list at all:</b> the plugin didn't load — take any option to finish the wizard, then run <code class="k">openclaw models list --provider groq</code>. If it prints models, set <code class="k">groq/openai/gpt-oss-20b</code> as the default model in your config and <code class="k">openclaw gateway restart</code>. If it prints nothing, re-run the plugin install and restart the gateway. Rehearse this branch — it's the one that will happen to somebody in the room.</div>
+  <div class="note pro"><b>If Gemini isn't picking up the key:</b> take any option to finish the wizard, then run <code class="k">openclaw models list --provider google</code>. If it prints nothing, double-check <code class="k">GEMINI_API_KEY</code> is actually in <code class="k">~/.openclaw/.env</code> (not exported in a shell) and run <code class="k">openclaw gateway restart</code>. If it prints models but the wrong one is default, set <code class="k">google/gemini-2.5-flash</code> in your config and restart the gateway. Rehearse this branch — it's the one that will happen to somebody in the room.</div>
 
   <h3 style="margin-top:32px;font-size:22px">Step 5 — Confirm it's alive, then close the terminal</h3>
   <div class="term">
@@ -732,7 +723,7 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
 <pre><span class="pr">$</span> openclaw doctor
 <span class="ok">✓</span> node version
 <span class="ok">✓</span> gateway reachable       <span class="cm">loopback 127.0.0.1:18789 · token auth</span>
-<span class="ok">✓</span> model provider configured  <span class="cm">groq/openai/gpt-oss-20b</span>
+<span class="ok">✓</span> model provider configured  <span class="cm">google/gemini-2.5-flash</span>
 <span class="wn">!</span> no channels configured   <span class="cm"># expected — we skipped that on purpose</span>
 
 <span class="pr">$</span> openclaw dashboard
@@ -851,12 +842,12 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
 <pre><span class="pr">$</span> openclaw agents add reviewer
 <span class="ok">✓</span> agent <span class="pa">reviewer</span> created
-  workspace  <span class="pa">~/.openclaw/workspace-reviewer</span>
+  workspace  <span class="pa">~/.openclaw/workspace/reviewer</span>
   state dir  <span class="pa">~/.openclaw/agents/reviewer/</span>
 
 <span class="pr">$</span> openclaw agents list --tree
 main      <span class="cm">(default)</span>  ~/.openclaw/workspace
-reviewer              ~/.openclaw/workspace-reviewer</pre>
+reviewer              ~/.openclaw/workspace/reviewer</pre>
   </div>
 
   <p>That one command gave the reviewer <b>its own workspace, its own state directory, and its own session store.</b> They are separate by default — which is exactly the property Priya is buying. The reviewer does not inherit the researcher's memory, its notes, or its conversation history.</p>
@@ -872,12 +863,22 @@ reviewer              ~/.openclaw/workspace-reviewer</pre>
       <div class="arb">◆ Agent 2</div>
       <h4>reviewer — the sub-editor</h4>
       <p>Never searches, never drafts. Reads the file cold, hunts for unsupported claims and disagreeing sources, and writes a verdict beside it.</p>
-      <span class="arp">~/.openclaw/workspace-reviewer</span>
+      <span class="arp">~/.openclaw/workspace/reviewer</span>
     </div>
   </div>
 
   <h3 style="margin-top:32px;font-size:22px">Step 2 — Give each one its job description</h3>
-  <p>An agent's standing instructions live in <code class="k">AGENTS.md</code> in its own workspace. Open each in a text editor — or, if you'd rather not leave the chat window, <b>ask <code class="k">main</code> to write them for you</b>: "Write the following into <code class="k">~/.openclaw/workspace-reviewer/AGENTS.md</code>, exactly as I give it to you," then paste the text. It has file tools; this is precisely the kind of errand they're for. The researcher's:</p>
+  <p>An agent's standing instructions live in <code class="k">AGENTS.md</code> in its own workspace. Open each in a text editor — or, if you'd rather not leave the chat window, <b>ask <code class="k">main</code> to write them for you</b>: "Write the following into <code class="k">~/.openclaw/workspace/reviewer/AGENTS.md</code>, exactly as I give it to you," then paste the text. It has file tools; this is precisely the kind of errand they're for.</p>
+
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal — open each file directly</span></div>
+<pre><span class="pr">$</span> nano ~/.openclaw/workspace/AGENTS.md
+<span class="cm"># paste the researcher's instructions below, save (Ctrl+O), exit (Ctrl+X)</span>
+
+<span class="pr">$</span> nano ~/.openclaw/workspace/reviewer/AGENTS.md
+<span class="cm"># paste the reviewer's instructions below, save, exit</span></pre>
+  </div>
+  <p>The researcher's:</p>
 
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace/AGENTS.md</span></div>
@@ -892,7 +893,7 @@ When I ask you to research a topic:
   </div>
   <p>And the reviewer's — note how much of it is about what <em>not</em> to do:</p>
   <div class="term">
-    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace-reviewer/AGENTS.md</span></div>
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace/reviewer/AGENTS.md</span></div>
 <pre><span class="cm"># Role: Groundwire sub-editor</span>
 
 You review briefs. You do not write them and you do not research.
@@ -934,11 +935,11 @@ Save your verdict to <span class="pa">&lt;same-path&gt;-review.md</span></pre>
 
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal — the full round trip</span></div>
-<pre><span class="pr">$</span> openclaw --agent main "Research how flood early-warning
+<pre><span class="pr">$</span> openclaw agent --agent main --message "Research how flood early-warning
     systems are funded in Indian cities. Brief only."
 <span class="ok">✓</span> wrote <span class="pa">~/groundwire/briefs/flood-warning-funding.md</span>
 
-<span class="pr">$</span> openclaw --agent reviewer "Review
+<span class="pr">$</span> openclaw agent --agent reviewer --message "Review
     ~/groundwire/briefs/flood-warning-funding.md"
 <span class="ok">✓</span> wrote <span class="pa">~/groundwire/briefs/flood-warning-funding-review.md</span>
 
@@ -1010,8 +1011,8 @@ KEEP  central scheme funding, named in source 2
   </div>
 
   <ol class="verifySteps">
-    <li>In n8n (your instance from Class 11, or a free cloud account), add a <b>Webhook</b> node. Method <code>POST</code>. Copy the URL it gives you.</li>
-    <li>Add a <b>Google Docs → Create Document</b> node. Title: <code>Review: {{ $json.topic }}</code>. Content: <code>{{ $json.verdict }}</code>.</li>
+    <li>In n8n (your instance from Class 11, or a free cloud account), add a <b>Webhook</b> node. Method <code>POST</code>. In the <b>Respond</b> dropdown, set it to <b>Using 'Respond to Webhook' Node</b> — that's what makes the node further down in the chain the thing that answers the agent, instead of the webhook replying the instant it receives data. Copy the URL it gives you.</li>
+    <li>Add a <b>Google Docs → Update Document</b> node. No Title field. Content (JSON): <code>{{ $json.body.verdict }}</code>.</li>
     <li>Add a <b>Gmail → Send Email</b> node addressed to Priya, so the sub-editor's verdict reaches an actual sub-editor.</li>
     <li>Add a <b>Respond to Webhook</b> node so the agent gets a confirmation back rather than silence.</li>
     <li><b>Activate</b> the workflow, then test it from a terminal with <code>curl</code> before the agent ever touches it. If the Doc doesn't appear from curl, the agent isn't your problem.</li>
@@ -1021,24 +1022,13 @@ KEEP  central scheme funding, named in source 2
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">test the workflow before wiring the agent</span></div>
 <pre><span class="pr">$</span> curl -X POST https://YOUR-INSTANCE.app.n8n.cloud/webhook/xxxxx \
     -H "Content-Type: application/json" \
-    -d '{"topic":"test","verdict":"posted from the terminal"}'
+    -d '{"verdict":"posted from the terminal"}'
 {"status":"success"}</pre>
   </div>
 
   <div class="svgWrap">
     <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/197/918/original/1.png?1779279338" alt="The finished n8n workflow">
     <div class="svgCap">Four nodes. Nothing clever — and that's what makes it the reliable half of the system.</div>
-  </div>
-
-  <p>Then tell the reviewer agent about the address, in its <code class="k">AGENTS.md</code> so it sticks:</p>
-  <div class="term">
-    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">appended to ~/.openclaw/workspace-reviewer/AGENTS.md</span></div>
-<pre>After saving a verdict file, POST it to:
-  https://YOUR-INSTANCE.app.n8n.cloud/webhook/xxxxx
-
-JSON body: { "topic": ..., "verdict": ... }
-Then tell me what came back. If the POST fails, say so plainly.
-Do not retry more than twice.</pre>
   </div>
 
   <div class="say">
@@ -1163,7 +1153,7 @@ Do not retry more than twice.</pre>
     <div class="chalHead"><span class="cn">C2</span><h4>Finish the OpenClaw install and teach it about you</h4><span class="chev">▸</span></div>
     <div class="chalBody">
       <div class="cLabel">Mission</div>
-      <p class="mission">If the install didn't complete in class, finish it: Node check → install → <code class="k">openclaw plugins install @openclaw/groq-provider</code> → key into <code class="k">~/.openclaw/.env</code> → <code class="k">openclaw onboard --install-daemon</code> → <code class="k">openclaw doctor</code> → <code class="k">openclaw dashboard</code>. Then, all in the chat window: teach it five true things about how you work, end the session, and come back the next day.</p>
+      <p class="mission">If the install didn't complete in class, finish it: Node check → install → <code class="k">GEMINI_API_KEY</code> into <code class="k">~/.openclaw/.env</code> → <code class="k">openclaw onboard --install-daemon</code> → <code class="k">openclaw doctor</code> → <code class="k">openclaw dashboard</code>. Then, all in the chat window: teach it five true things about how you work, end the session, and come back the next day.</p>
       <div class="cLabel">Done when</div>
       <p class="mission">You can open <code class="k">~/.openclaw/workspace/USER.md</code> and read those five things as text — and you've edited one of them by hand, then confirmed in chat that the agent picked up your edit. Bonus: get the agent to print that file back to you in chat, without opening it yourself.</p>
       <div class="cLabel">Stretch</div>
@@ -1191,17 +1181,12 @@ Do not retry more than twice.</pre>
   <div class="secHead"><span class="secNum">§ 8</span><h2>Wrap-Up — Key Takeaways</h2><span class="secTime">⏱ 6 min</span></div>
   <p class="secLede">Three agents built, one webhook wired, and — the part that'll matter longest — a rule for when not to.</p>
 
-  <div class="svgWrap">
-    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/974/original/img3.jpeg?1777292822" alt="The full stack built across the course">
-    <div class="svgCap">From "what is a prompt" to a multi-agent system running on your own machine.</div>
-  </div>
-
   <div class="card">
     <h4>Six Things You Can Now Do</h4>
     <table class="tbl">
       <tr><th>Skill</th><th>What you can now do</th></tr>
       <tr><td>Gemini Gems</td><td>Ship a reusable personal assistant in ten minutes, free, on web and phone</td></tr>
-      <tr><td>OpenClaw setup</td><td>Install an always-on agent, wire it to a free Groq key, and verify it with <code class="k">doctor</code></td></tr>
+      <tr><td>OpenClaw setup</td><td>Install an always-on agent, wire it to a free Gemini key, and verify it with <code class="k">doctor</code></td></tr>
       <tr><td>Memory you own</td><td>Read, edit, and version-control an agent's memory as plain Markdown</td></tr>
       <tr><td>Two-agent pipeline</td><td>Add a second agent with its own workspace and hand work over through a file</td></tr>
       <tr><td>Credential isolation</td><td>Keep the powerful logins in n8n and give the agent only a URL</td></tr>
@@ -1237,7 +1222,7 @@ Do not retry more than twice.</pre>
 
 <div class="footer"><div class="wrap">
   <p>Scaler AIML · Class 16 — Personal Agents &amp; Multi-Agent Systems: Your Own Agent, and a Second Opinion · Groundwire Edition</p>
-  <p style="margin-top:8px">OpenClaw (install, <code class="k">onboard</code>, <code class="k">doctor</code>, <code class="k">dashboard</code>, <code class="k">agents add</code>, workspace paths) · <code class="k">plugins install @openclaw/groq-provider</code> · Gemini Gems · Groq free tier · n8n webhook — all verified against current documentation, August 2026 · <b>OpenClaw ships very fast and every provider's free-tier limits move repeatedly; re-verify commands, wizard wording, and quotas before you teach this live.</b></p>
+  <p style="margin-top:8px">OpenClaw (install, <code class="k">onboard</code>, <code class="k">doctor</code>, <code class="k">dashboard</code>, <code class="k">agents add</code>, workspace paths) · Gemini API key setup · Gemini Gems · Groq free tier (n8n, Class 15) · n8n webhook — all verified against current documentation, August 2026 · <b>OpenClaw ships very fast and every provider's free-tier limits move repeatedly; re-verify commands, wizard wording, and quotas before you teach this live.</b></p>
 </div></div>
 
 <script>

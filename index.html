@@ -292,6 +292,18 @@ pre.code .kw{color:var(--orange2)}
 .term pre .ok{color:var(--green)}
 .term pre .wn{color:var(--gold)}
 .term pre .pa{color:#7cc4ff}
+.chatWin{background:#0f141b;border:1px solid #3dd6c344;border-radius:16px;overflow:hidden;margin:18px 0}
+.chatWin .cwHead{background:linear-gradient(90deg,#0e1a1f,#141b26);border-bottom:1px solid #3dd6c333;padding:11px 16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--teal);font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.chatWin .cwUrl{color:var(--ink3);text-transform:none;letter-spacing:0;font-size:11px;font-weight:400}
+.chatWin .cwBody{padding:18px 20px;display:flex;flex-direction:column;gap:11px}
+.cbNum{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.cbNum:first-child{margin-top:0;border-top:none;padding-top:0}
+.cbRow{display:flex}
+.cbRow.me{justify-content:flex-end}
+.cbRow .cbb{max-width:84%;border-radius:14px;padding:10px 15px;font-size:13.5px;line-height:1.7}
+.cbRow.me .cbb{background:var(--teal-dim);border:1px solid #3dd6c344;color:var(--ink);border-bottom-right-radius:4px}
+.cbRow.ag .cbb{background:#0a0d12;border:1px solid var(--line);color:var(--ink2);border-bottom-left-radius:4px}
+.cbTool{align-self:flex-start;font-family:var(--mono);font-size:11px;color:var(--gold);background:#0a0d12;border:1px dashed #ffd16644;border-radius:9px;padding:6px 12px;max-width:100%;overflow-x:auto;white-space:nowrap}
 .gemPanel{background:#0f141b;border:1px solid #a48bff44;border-radius:16px;overflow:hidden;margin:18px 0}
 .gemPanel .gpHead{background:linear-gradient(90deg,#1b1630,#141b26);border-bottom:1px solid #a48bff33;padding:12px 18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--violet);font-weight:700}
 .gemPanel .gpBody{padding:18px 20px}
@@ -444,7 +456,7 @@ pre.code .kw{color:var(--orange2)}
     <p>"And then we're going to do the thing everyone skips. Everybody builds the second agent because it sounds impressive. Almost nobody asks whether it was worth it. The last section of today is entirely about that question — and one of the sims is scored so that <em>adding agents loses you points</em>."</p>
   </div>
 
-  <div class="note beg"><b>Beginner Note — three builds, deliberately unequal:</b> Build 1 takes ten minutes and needs no install at all. Build 2 needs a terminal. Build 3 is one command on top of Build 2. That order is on purpose — by the ten-minute mark every single person in this room has a working personal agent, no matter what their laptop does later.</div>
+  <div class="note beg"><b>Beginner Note — three builds, deliberately unequal:</b> Build 1 takes ten minutes and needs no install at all. Build 2 needs a terminal to install — and then closes it, because the whole demo happens in a browser chat window. Build 3 is one command on top of Build 2. That order is on purpose — by the ten-minute mark every single person in this room has a working personal agent, no matter what their laptop does later.</div>
 </div></section>
 
 <!-- ============ SECTION: CONCEPT ============ -->
@@ -497,7 +509,7 @@ pre.code .kw{color:var(--orange2)}
       <tr><td>Skills</td><td>The tools the agent can reach for — web search, reading and writing files</td><td>Writing a file is how our two agents hand work to each other.</td></tr>
       <tr><td>Memory</td><td>Plain Markdown files in a workspace folder on your disk</td><td>Openable, greppable, backup-able. And separate per agent by default.</td></tr>
       <tr><td>Heartbeat</td><td>A scheduler that can wake the agent on a timer</td><td>The answer to Advait's 11:40pm tip.</td></tr>
-      <tr><td>Model (LLM)</td><td>The actual reasoning, reached by API key</td><td>Free Gemini today. Swap the key, everything else stays.</td></tr>
+      <tr><td>Model (LLM)</td><td>The actual reasoning, reached by API key</td><td>Your free Groq key from Class 15. Swap the key, everything else stays.</td></tr>
     </table>
   </div>
 
@@ -618,14 +630,14 @@ Rules you never break:
 <!-- ============ SECTION: BUILD 2 — OPENCLAW ============ -->
 <section class="blk" id="openclaw"><div class="wrap">
   <div class="secHead"><span class="secNum">§ 3</span><h2>Build 2 — OpenClaw on Your Machine</h2><span class="secTime">⏱ 20 min</span></div>
-  <p class="secLede">Same idea as the Gem — a personal agent — but this one is a process running on your hardware, with memory you can <code class="k">cat</code>.</p>
+  <p class="secLede">Same idea as the Gem — a personal agent — but this one is a process running on your own hardware. <b>The terminal appears once, to install it, and then we shut it. Everything after that happens in one chat window.</b></p>
 
-  <div class="note adv"><b>Instructor — before you teach this live:</b> run the entire install on a clean machine (or a fresh user account) the night before, and screenshot every wizard screen as it exists <em>this week</em>. OpenClaw ships fast and wizard wording moves. Also decide your fallback now: if more than a third of the room is stuck at the ten-minute mark, stop, demo the rest from your screen, and hand them §7's install checklist as homework. <b>Build 1 working for everyone beats Build 3 working for four people.</b></div>
+  <div class="note adv"><b>Instructor — two things to get right before you teach this live:</b> (1) run the whole install on a clean machine the night before and screenshot every wizard screen as it exists <em>this week</em> — OpenClaw ships fast and wizard wording moves. (2) <b>Do not flip between a terminal and the browser during the demo.</b> Install, verify, then close the terminal window on the projector and don't reopen it until §4. Beginners read a fast terminal↔browser switch as "there are two different things going on here," and the whole point of this section is that there's one agent and you talk to it in one box. Fallback if more than a third of the room is stuck at the ten-minute mark: stop, demo the rest from your screen, hand them §7's checklist as homework. <b>Build 1 working for everyone beats Build 3 working for four people.</b></div>
 
   <div class="card">
     <h4>What OpenClaw actually is</h4>
     <p>An open-source agent runtime you install on your own computer. It gives you the four things a Gem couldn't: a background service that keeps running, tools that reach your filesystem and the web, memory stored as Markdown files in a folder you own, and — the reason we're here — the ability to run <b>more than one agent</b>, each with its own workspace and its own instructions.</p>
-    <p style="margin-top:10px">You still rent the thinking. The model is Gemini, over the free API tier, reached by a key. What you stop renting is everything around it.</p>
+    <p style="margin-top:10px">You still rent the thinking. The model is reached by an API key — today, the same free <b>Groq</b> key you made in Class 15. What you stop renting is everything around it.</p>
   </div>
 
   <div class="svgWrap">
@@ -633,20 +645,15 @@ Rules you never break:
     <div class="svgCap">Renting a furnished flat versus owning the place. Both are legitimate choices — they're just different failure modes.</div>
   </div>
 
-  <h3 style="margin-top:36px;font-size:22px">Step 1 — Get a free Gemini API key</h3>
+  <h3 style="margin-top:36px;font-size:22px">Step 1 — The brain: your free Groq key</h3>
+  <p>If you kept your key from Class 15, you're already done with this step — <b>use the same one.</b> If not, it's two minutes:</p>
   <ol class="verifySteps">
-    <li>Go to <code>aistudio.google.com</code> and sign in with a Google account.</li>
-    <li>Click <b>Get API key</b> (top right), then <b>Create API key</b>. Let it create a project if it offers.</li>
-    <li>Copy the key — it starts with <code>AIza</code>. Park it in a notes file for the next two minutes.</li>
-    <li>While you're there, open <code>aistudio.google.com/rate-limit</code> and look at <b>your own</b> live limits for the model you plan to use.</li>
+    <li>Go to <code>console.groq.com</code> and sign in with email, Google, or GitHub. No credit card.</li>
+    <li>Open <b>API Keys → Create API Key</b>. Copy it — it starts with <code>gsk_</code> and is shown to you exactly once.</li>
+    <li>Park it in a notes file for the next five minutes. We'll paste it into one file, not into the wizard.</li>
   </ol>
 
-  <div class="svgWrap">
-    <img src="https://d2beiqkhq929f0.cloudfront.net/public_assets/assets/000/192/948/original/3.jpeg?1777287001" alt="Getting a Gemini API key in Google AI Studio">
-    <div class="svgCap">AI Studio → Get API key. No credit card, no billing account.</div>
-  </div>
-
-  <div class="note pro"><b>Read this before you quote a number at your class:</b> Google cut free-tier daily request limits sharply in December 2025, and the ceilings have moved several times since — different models now sit at wildly different daily allowances, and older tutorials confidently quoting "1,500 requests a day" are simply out of date. Don't teach a number from memory or from this script. Open the rate-limit page in AI Studio on the day and read what <em>your</em> account actually has. The teaching point survives regardless: <b>free tiers are metered, the meter moves, and twenty students sharing a classroom Wi-Fi find the ceiling much faster than one person at home.</b></div>
+  <div class="note pro"><b>Why Groq and not a free Gemini API key — read this, it will save your class:</b> a Gem (Build 1) is the consumer Gemini app and has nothing to do with API quotas, so it stays exactly as it is. But the <em>API</em> free tier is a different animal: Google cut free daily request limits sharply in December 2025 and has moved them repeatedly since, and the numbers older tutorials quote are simply gone. The part that catches people out is that <b>one chat message to an agent is not one API call.</b> A single "search this and summarise it" turn is a think call, a tool call, an observe call, and a final answer — four or more requests before the room has finished reading your prompt. On a tight daily free tier, two students can burn the quota during the demo. Groq's free tier is metered <b>per minute</b>, not per day, which means a rate limit there is a sixty-second wait rather than a dead key for the rest of the session. <b>Never quote a specific free-tier number from a script — including this one. Open the provider's own limits page on the day.</b></div>
 
   <h3 style="margin-top:36px;font-size:22px">Step 2 — Check Node, then install</h3>
   <p>OpenClaw runs on Node.js. Check what you have before installing anything:</p>
@@ -675,7 +682,25 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
 
   <div class="note adv"><b>Say this out loud when you run the curl line:</b> "Piping a script from the internet straight into a shell is a real thing to be thoughtful about — you're running whatever that URL serves, with your permissions. It's a normal install pattern for developer tools, and it's fine for a project you've chosen to trust, but the habit worth keeping is: know whose domain it is before you pipe it. If that makes you uncomfortable, the npm line does the same job." Don't skip this. Half the room has copy-pasted a curl-to-bash before without ever thinking about it.</div>
 
-  <h3 style="margin-top:36px;font-size:22px">Step 3 — Onboard</h3>
+  <h3 style="margin-top:36px;font-size:22px">Step 3 — Hand it the brain</h3>
+  <p>Groq comes in as a provider plugin — one install command, one restart:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
+<pre><span class="pr">$</span> openclaw plugins install @openclaw/groq-provider
+<span class="ok">✓</span> installed <span class="pa">@openclaw/groq-provider</span>
+
+<span class="pr">$</span> openclaw gateway restart</pre>
+  </div>
+
+  <p>Now put the key where the background service can actually read it — a file called <code class="k">.env</code> inside <code class="k">~/.openclaw/</code>:</p>
+  <div class="term">
+    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/.env</span></div>
+<pre>GROQ_API_KEY=gsk_your_key_here</pre>
+  </div>
+
+  <div class="note beg"><b>Beginner Note — why a file and not <code class="k">export GROQ_API_KEY=…</code>:</b> anything you type into a terminal window belongs to <em>that window</em> and dies with it. The gateway is a background service started by your operating system, not by your terminal, so it never sees those variables. Putting the key in <code class="k">~/.openclaw/.env</code> is what makes it survive a reboot — which is the entire point of an always-on agent. This is also the single most common "it worked in my terminal but the agent says no API key" bug people hit on day one.</div>
+
+  <h3 style="margin-top:36px;font-size:22px">Step 4 — Onboard</h3>
   <p>One command starts a wizard. The <code class="k">--install-daemon</code> flag is the part that makes it always-on — it registers the gateway as a background service so it survives you closing the terminal.</p>
 
   <div class="term">
@@ -688,73 +713,103 @@ v24.15.0   <span class="cm"># need 22.22.3+, 24.15+, or 25.9+ · 26 is what the 
     <tr><th>Wizard asks</th><th>Answer</th><th>Why</th></tr>
     <tr><td>Acknowledge risk warning</td><td>Yes</td><td>It's telling you the agent can touch your files. It genuinely can.</td></tr>
     <tr><td>Onboarding mode</td><td>QuickStart</td><td>Minutes instead of a tour.</td></tr>
-    <tr><td>Model provider</td><td>Google</td><td>Free tier, no card.</td></tr>
-    <tr><td>Auth method</td><td>Gemini API key</td><td>The <code class="k">AIza…</code> key from Step 1.</td></tr>
-    <tr><td>Default model</td><td><code class="k">gemini-2.5-flash</code></td><td>Fast and cheap. Check its current free daily limit before class.</td></tr>
+    <tr><td>Model provider</td><td><b>Groq</b> — under <b>More…</b> if it isn't on the first screen</td><td>The plugin from Step 3 is what puts it in that list. The provider menu is built from installed plugins, not a fixed list.</td></tr>
+    <tr><td>Auth</td><td>Already found</td><td>It reads <code class="k">GROQ_API_KEY</code> from the <code class="k">.env</code> file. Nothing to paste.</td></tr>
+    <tr><td>Default model</td><td><code class="k">groq/openai/gpt-oss-20b</code></td><td>The small, fast one — same model as Class 15. Plenty for today, and the cheapest thing to hit a rate limit with.</td></tr>
     <tr><td>Add a channel now?</td><td><b>Skip</b></td><td>This is where Telegram/WhatsApp would go. We're using the built-in browser chat instead.</td></tr>
     <tr><td>Search provider</td><td>DuckDuckGo</td><td>No key required.</td></tr>
-    <tr><td>Configure skills now?</td><td>No</td><td>Defaults are enough for today.</td></tr>
+    <tr><td>Configure skills now?</td><td>No</td><td>Defaults are enough for today — and fewer skills means a smaller prompt going to the model every turn.</td></tr>
     <tr><td>Enable hooks?</td><td>Skip for now</td><td>Space to select, Enter to confirm — this one catches people out.</td></tr>
     <tr><td>Gateway service</td><td>Install / Restart</td><td>This is the always-on part.</td></tr>
     <tr><td>How to hatch your agent</td><td>Hatch in terminal</td><td>You'll see it come up live.</td></tr>
   </table>
 
-  <h3 style="margin-top:32px;font-size:22px">Step 4 — Confirm it's alive</h3>
-  <div class="term">
-    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
-<pre><span class="pr">$</span> openclaw gateway status
-<span class="ok">● running</span>  <span class="cm">loopback 127.0.0.1:18789 · token auth</span>
+  <div class="note pro"><b>If Groq isn't in the provider list at all:</b> the plugin didn't load — take any option to finish the wizard, then run <code class="k">openclaw models list --provider groq</code>. If it prints models, set <code class="k">groq/openai/gpt-oss-20b</code> as the default model in your config and <code class="k">openclaw gateway restart</code>. If it prints nothing, re-run the plugin install and restart the gateway. Rehearse this branch — it's the one that will happen to somebody in the room.</div>
 
-<span class="pr">$</span> openclaw doctor
-<span class="ok">✓</span> node version
-<span class="ok">✓</span> gateway reachable
-<span class="ok">✓</span> model provider configured
-<span class="wn">!</span> no channels configured   <span class="cm"># expected — we skipped that on purpose</span></pre>
-  </div>
-  <p>Mostly green is a pass. The channels warning is the one we caused deliberately. Now open the dashboard:</p>
+  <h3 style="margin-top:32px;font-size:22px">Step 5 — Confirm it's alive, then close the terminal</h3>
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
-<pre><span class="pr">$</span> openclaw dashboard
-<span class="cm"># opens the Control UI and hands over an auth token</span>
+<pre><span class="pr">$</span> openclaw doctor
+<span class="ok">✓</span> node version
+<span class="ok">✓</span> gateway reachable       <span class="cm">loopback 127.0.0.1:18789 · token auth</span>
+<span class="ok">✓</span> model provider configured  <span class="cm">groq/openai/gpt-oss-20b</span>
+<span class="wn">!</span> no channels configured   <span class="cm"># expected — we skipped that on purpose</span>
+
+<span class="pr">$</span> openclaw dashboard
+<span class="cm"># opens the Control UI in your browser and hands over an auth token</span>
 <span class="pa">http://127.0.0.1:18789</span></pre>
   </div>
-  <p>Find the <b>Chat</b> tab and type <code class="k">Hello — can you hear me?</code>. When it answers, you have a personal agent running on your own machine.</p>
+  <p>Mostly green is a pass — the channels warning is the one we caused deliberately. <code class="k">openclaw dashboard</code> is the <b>last terminal command of this section.</b></p>
+
+  <div class="say do">
+    <span class="who">🎙 Instructor Does — actually close it</span>
+    <p>"Once the dashboard opens, close the terminal window on the projector. Say it out loud: <em>'That's the install done. We're not going back in there.'</em> Then make the browser window full-screen and leave it there for the next ten minutes."</p>
+    <p>"The reason is simple. If the room watches you jump between a black window and a browser, they build a mental model where the agent is somehow two things and they're missing half of it. It isn't. There's a service running in the background, and a chat box that talks to it, and for the rest of this section the chat box is the entire product."</p>
+  </div>
 
   <div class="note beg"><b>Beginner Note — <code class="k">127.0.0.1</code> means "this computer, and only this computer."</b> That address is not on the internet. Nobody else can reach your dashboard, even on the same Wi-Fi. That's a feature, and it's also why there's no login screen worth the name — the token in your terminal is the whole security model. Never port-forward this to the open internet. If you want it from your phone later, put both devices on a private network like Tailscale.</div>
 
-  <h3 style="margin-top:36px;font-size:22px">Step 5 — Three prompts that show you what changed</h3>
-  <div class="grid3">
-    <div class="useCase"><div class="ico">💬</div><div class="co">Prompt 1 · baseline</div><h4>Just a question</h4><p>"In under five lines, what's the difference between a list and a tuple in Python?" Answers instantly. This is the part a Gem also does. Nothing new yet.</p></div>
-    <div class="useCase"><div class="ico">🌐</div><div class="co">Prompt 2 · tools</div><h4>Make it leave the room</h4><p>"Search the web for what changed in Python 3.14 and summarise the top three in two sentences each." Watch for real links. It went out and read pages.</p></div>
-    <div class="useCase"><div class="ico">🧠</div><div class="co">Prompt 3 · memory</div><h4>Make it remember</h4><p>"Remember: I'm Zara, I produce for Groundwire, and I write in short sentences." Now <b>close the tab</b>. Reopen it. Ask "what do you know about me?"</p></div>
+  <h3 style="margin-top:36px;font-size:22px">Step 6 — Six messages in one chat box</h3>
+  <p>Find the <b>Chat</b> tab in the dashboard. Everything below happens there — same box, same conversation, no other windows. The six messages are ordered on purpose: the first one is something any chatbot could do, and by the fourth you're watching it do things a chatbot flatly cannot.</p>
+
+  <div class="chatWin">
+    <div class="cwHead"><span>💬 OpenClaw Control UI · Chat</span><span class="cwUrl">http://127.0.0.1:18789</span></div>
+    <div class="cwBody">
+      <div class="cbNum">1 · it's a chatbot (warm-up, gets a laugh)</div>
+      <div class="cbRow me"><div class="cbb">Give a two-line pep talk to someone who has just spilled coffee into their laptop keyboard.</div></div>
+      <div class="cbRow ag"><div class="cbb">The laptop knew the risks when it agreed to live on a desk next to a mug. You, meanwhile, are fine — and rice is not a repair strategy, so call the service centre.</div></div>
+
+      <div class="cbNum">2 · give it something to remember</div>
+      <div class="cbRow me"><div class="cbb">Remember this about me: I'm Zara, I produce for a small newsroom called Groundwire, and I like short sentences.</div></div>
+      <div class="cbRow ag"><div class="cbb">Noted — saved to my memory about you.</div></div>
+
+      <div class="cbNum">3 · the beat of the section — make it show you the file</div>
+      <div class="cbRow me"><div class="cbb">Which file did you just write that into? Print the file back to me exactly as it is on disk.</div></div>
+      <div class="cbTool">🔧 read_file — ~/.openclaw/workspace/USER.md</div>
+      <div class="cbRow ag"><div class="cbb"><span style="font-family:var(--mono);font-size:12px;color:var(--gold)"># User<br>- Name: Zara<br>- Role: producer at Groundwire, a small digital newsroom<br>- Style: prefers short sentences</span><br><br>That's <b>~/.openclaw/workspace/USER.md</b> — plain Markdown, in a folder you own.</div></div>
+
+      <div class="cbNum">4 · hands — a thing no chatbot can do</div>
+      <div class="cbRow me"><div class="cbb">Make a folder called groundwire-test on my Desktop, and put a file in it called hello.md that says "my agent was here". Then tell me the path.</div></div>
+      <div class="cbTool">🔧 write_file — ~/Desktop/groundwire-test/hello.md</div>
+      <div class="cbRow ag"><div class="cbb">Done: <b>~/Desktop/groundwire-test/hello.md</b></div></div>
+
+      <div class="cbNum">5 · it can leave the room (one search, keep it small)</div>
+      <div class="cbRow me"><div class="cbb">Search the web for one recent news item about urban flood warning systems in India. One sentence and the link. Nothing else.</div></div>
+      <div class="cbTool">🔧 web_search — "urban flood warning system India"</div>
+      <div class="cbRow ag"><div class="cbb">A city corporation has expanded its rain-gauge alert network ahead of the monsoon. <span style="color:var(--teal)">https://…</span></div></div>
+
+      <div class="cbNum">6 · close the browser tab · reopen it · ask again</div>
+      <div class="cbRow me"><div class="cbb">Who am I, and what do I do?</div></div>
+      <div class="cbRow ag"><div class="cbb">You're Zara. You produce for Groundwire. You like short sentences — so I'll keep it to three.</div></div>
+    </div>
   </div>
 
-  <div class="say do">
-    <span class="who">🎙 Instructor Does — the moment that lands</span>
-    <p>"After prompt 3, don't just reopen the tab. Go to a terminal and show them the file. This is the beat of the whole section — the memory isn't <em>described</em> as a file, it <em>is</em> a file, and I can print it on screen."</p>
-  </div>
-
-  <div class="term">
-    <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal</span></div>
-<pre><span class="pr">$</span> ls ~/.openclaw/workspace
-AGENTS.md   SOUL.md   USER.md   notes/
-
-<span class="pr">$</span> cat ~/.openclaw/workspace/USER.md
-<span class="cm"># User</span>
-- Name: Zara
-- Role: producer at Groundwire, a small digital newsroom
-- Style: prefers short sentences</pre>
+  <div class="say">
+    <span class="who">🎙 Instructor Says — the three lines that carry this</span>
+    <p>Message 4: <em>"Go and look at your actual Desktop. The folder is there. Nothing you have used in this course before today could do that — the Gem you built forty minutes ago physically cannot reach your machine."</em></p>
+    <p>Message 3: <em>"I didn't go to a terminal to prove the memory is a file. I asked it, and it read its own memory out to me. That's the difference between memory somebody describes to you and memory you can point at."</em></p>
+    <p>Message 6: <em>"That tab was closed. The conversation was gone. It still knows who you are — because what it remembered was never in the conversation, it was in a file."</em></p>
   </div>
 
   <div class="fileTree">
     <div class="ftRow"><span class="ftn">~/.openclaw/workspace/</span><span class="ftc">← your first agent's home. Its default working directory.</span></div>
     <div class="ftRow"><span class="ftn">  ├── <b>AGENTS.md</b></span><span class="ftc">standing instructions — the agent's job description</span></div>
     <div class="ftRow"><span class="ftn">  ├── <b>SOUL.md</b></span><span class="ftc">personality and tone</span></div>
-    <div class="ftRow"><span class="ftn">  ├── <b>USER.md</b></span><span class="ftc">what it has learned about you</span></div>
+    <div class="ftRow"><span class="ftn">  ├── <b>USER.md</b></span><span class="ftc">what it has learned about you — the file it just printed for you</span></div>
     <div class="ftRow"><span class="ftn">  └── <b>notes/</b></span><span class="ftc">whatever it writes as it works</span></div>
   </div>
 
-  <p><b>Three things follow from memory being plain Markdown, and they're all practical:</b> you can read it, so you can tell exactly why the agent thinks what it thinks. You can edit it, so fixing a wrong belief is a text edit rather than a re-training exercise. And you can <code class="k">git init</code> the folder, which means your agent's memory gets version history for free.</p>
+  <p>You never had to type <code class="k">ls</code> to find any of that — ask the agent "what files are in your workspace?" and it will tell you. <b>Three things follow from the memory being plain Markdown, and they're all practical:</b> you can read it, so you can tell exactly why the agent thinks what it thinks. You can edit it, so fixing a wrong belief is a text edit rather than a re-training exercise. And you can <code class="k">git init</code> the folder, which means your agent's memory gets version history for free.</p>
+
+  <div class="note pro"><b>⏱ Rate-limit survival kit — apply this whether you're on Groq, Gemini, or anything else free.</b> A room of thirty people all pressing Enter within the same ten seconds is its own kind of load, and free tiers meter per minute as well as per day. Six habits, all of which are just good prompting anyway:
+  <ul style="margin:10px 0 0 18px;font-size:14px;line-height:1.75">
+    <li><b>Cap the output in the prompt.</b> "Two lines." "One sentence and the link." Every prompt in Step 6 does this. Shorter answers are fewer tokens and fewer retries.</li>
+    <li><b>One search per message.</b> "Research this from five sources and compare them" is not one API call — it's five or six, in a loop, per student. Save that for take-home.</li>
+    <li><b>Ask for the path, not the contents,</b> once files get long. Re-printing a whole brief into chat spends the same tokens twice.</li>
+    <li><b>Leave hooks and heartbeat off during class.</b> A scheduler quietly waking agents in the background is the classic mystery-quota-drain.</li>
+    <li><b>Stagger the room.</b> Left half runs message 5, right half watches, then swap. Costs ninety seconds and prevents the pile-up entirely.</li>
+    <li><b>A 429 is not a broken install.</b> On a per-minute limit it clears itself — wait sixty seconds and send it again. Say this <em>before</em> anyone sees one, so the room doesn't start reinstalling things.</li>
+  </ul></div>
 
   <div class="sim" id="sim2">
     <h3>⚡ Simulator 2 — The Memory Ledger</h3>
@@ -782,6 +837,8 @@ AGENTS.md   SOUL.md   USER.md   notes/
 <section class="blk" id="twoagents"><div class="wrap">
   <div class="secHead"><span class="secNum">§ 4</span><h2>Build 3 — The Second Agent</h2><span class="secTime">⏱ 24 min</span></div>
   <p class="secLede">Priya's ask, built. One new command, one new folder, one file that passes between them — and a reviewer that has never seen the researcher's reasoning.</p>
+
+  <div class="note beg"><b>Beginner Note — yes, the terminal is back, and here's exactly why.</b> The chat window you just spent ten minutes in talks to <b>one</b> agent: <code class="k">main</code>. That's a known, documented limit of the Control UI — it can <em>show</em> you every agent you have, but it can only chat with the default one. So the second agent gets talked to from the command line. It's two commands, once, and then you're done: one to create it, one to send it a job. <b>Nothing you learned in the chat window stops being true</b> — the reviewer has the same memory files, the same tools, the same everything. It just doesn't have a tab.</div>
 
   <div class="say">
     <span class="who">🎙 Instructor Says</span>
@@ -820,7 +877,7 @@ reviewer              ~/.openclaw/workspace-reviewer</pre>
   </div>
 
   <h3 style="margin-top:32px;font-size:22px">Step 2 — Give each one its job description</h3>
-  <p>An agent's standing instructions live in <code class="k">AGENTS.md</code> in its own workspace. Open each in a text editor. The researcher's:</p>
+  <p>An agent's standing instructions live in <code class="k">AGENTS.md</code> in its own workspace. Open each in a text editor — or, if you'd rather not leave the chat window, <b>ask <code class="k">main</code> to write them for you</b>: "Write the following into <code class="k">~/.openclaw/workspace-reviewer/AGENTS.md</code>, exactly as I give it to you," then paste the text. It has file tools; this is precisely the kind of errand they're for. The researcher's:</p>
 
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">~/.openclaw/workspace/AGENTS.md</span></div>
@@ -873,7 +930,7 @@ Save your verdict to <span class="pa">&lt;same-path&gt;-review.md</span></pre>
     <p><b>The file is the handoff, and that's a deliberate design choice rather than a limitation.</b> If you gave both agents one shared memory store, the reviewer would start absorbing the researcher's working notes — its half-formed theories, its "this source seems dodgy but let's go with it" — and you'd be right back to marking your own homework. A file is a narrow, inspectable doorway: exactly the finished draft passes through, and nothing else. OpenClaw's own docs make the same argument, recommending separate memory by default with sharing added only where you can point at the reason.</p></div>
   </div>
 
-  <div class="note pro"><b>The two-terminal demo:</b> run this with two terminal windows side by side on the projector, one per agent, so the room can literally see there is no shared conversation between them. Left window asks <code class="k">main</code> to research; it prints a path. Right window pastes that path to <code class="k">reviewer</code>. The reviewer's very first sight of the topic is the file.</div>
+  <div class="note pro"><b>Demo it in one terminal, not two.</b> Earlier drafts of this class ran two side-by-side windows, one per agent — it looks impressive and it confuses beginners, because they start hunting for what makes the two windows different. There is nothing different about them. Run both commands in the same window, one after the other, and let the <code class="k">--agent</code> flag do the talking: <em>"Same window, same keyboard. The only thing that changed is the word after <code class="k">--agent</code> — and that word is the entire separation."</em> Then <code class="k">cat</code> the review file so the room sees the reviewer's first and only sight of the topic was a file.</div>
 
   <div class="term">
     <div class="tHead"><span class="tDot r"></span><span class="tDot y"></span><span class="tDot g"></span><span class="tName">terminal — the full round trip</span></div>
@@ -891,6 +948,8 @@ KEEP  central scheme funding, named in source 2
 <span class="wn">FLAG</span>  2024 figure - source 2 is quoting a 2021 report
 <span class="cm">CUT</span>   "widely considered successful" - no source states this</pre>
   </div>
+
+  <div class="note pro"><b>⏱ Keep this run small, for the same reason as §3.</b> A research-then-review round trip is the most API-expensive thing in this class — the researcher searches and drafts, then the reviewer re-reads that entire draft as input. Say "brief only, six bullets maximum" in the research prompt, exactly as written above, and the whole round trip stays comfortably inside a free tier. Ask for "a thorough report" instead and you will watch thirty people hit a rate limit simultaneously. If briefs come back long anyway, tell the researcher to cap it in its <code class="k">AGENTS.md</code> — a limit in the job description beats remembering to type it every time.</div>
 
   <div class="note beg"><b>Beginner Note — flags are the point, not a failure.</b> A review that comes back with nothing flagged usually means the reviewer isn't reviewing. When your reviewer produces all KEEPs on the first run, don't celebrate — suspect the instructions. The most common cause is an <code class="k">AGENTS.md</code> that describes the reviewer as "helpful", which quietly pushes it toward agreeing with you.</div>
 
@@ -1104,9 +1163,9 @@ Do not retry more than twice.</pre>
     <div class="chalHead"><span class="cn">C2</span><h4>Finish the OpenClaw install and teach it about you</h4><span class="chev">▸</span></div>
     <div class="chalBody">
       <div class="cLabel">Mission</div>
-      <p class="mission">If the install didn't complete in class, finish it: Node check → install → <code class="k">openclaw onboard --install-daemon</code> → <code class="k">openclaw doctor</code> → <code class="k">openclaw dashboard</code>. Then teach it five true things about how you work, end the session, and come back the next day.</p>
+      <p class="mission">If the install didn't complete in class, finish it: Node check → install → <code class="k">openclaw plugins install @openclaw/groq-provider</code> → key into <code class="k">~/.openclaw/.env</code> → <code class="k">openclaw onboard --install-daemon</code> → <code class="k">openclaw doctor</code> → <code class="k">openclaw dashboard</code>. Then, all in the chat window: teach it five true things about how you work, end the session, and come back the next day.</p>
       <div class="cLabel">Done when</div>
-      <p class="mission">You can open <code class="k">~/.openclaw/workspace/USER.md</code> and read those five things as text — and you've edited one of them by hand, then confirmed in chat that the agent picked up your edit.</p>
+      <p class="mission">You can open <code class="k">~/.openclaw/workspace/USER.md</code> and read those five things as text — and you've edited one of them by hand, then confirmed in chat that the agent picked up your edit. Bonus: get the agent to print that file back to you in chat, without opening it yourself.</p>
       <div class="cLabel">Stretch</div>
       <p class="mission"><code class="k">git init</code> the workspace folder and commit it. Your agent's memory now has version history, and you can diff what it learned this week.</p>
     </div>
@@ -1142,7 +1201,7 @@ Do not retry more than twice.</pre>
     <table class="tbl">
       <tr><th>Skill</th><th>What you can now do</th></tr>
       <tr><td>Gemini Gems</td><td>Ship a reusable personal assistant in ten minutes, free, on web and phone</td></tr>
-      <tr><td>OpenClaw setup</td><td>Install an always-on agent, wire it to a free Gemini key, and verify it with <code class="k">doctor</code></td></tr>
+      <tr><td>OpenClaw setup</td><td>Install an always-on agent, wire it to a free Groq key, and verify it with <code class="k">doctor</code></td></tr>
       <tr><td>Memory you own</td><td>Read, edit, and version-control an agent's memory as plain Markdown</td></tr>
       <tr><td>Two-agent pipeline</td><td>Add a second agent with its own workspace and hand work over through a file</td></tr>
       <tr><td>Credential isolation</td><td>Keep the powerful logins in n8n and give the agent only a URL</td></tr>
@@ -1178,7 +1237,7 @@ Do not retry more than twice.</pre>
 
 <div class="footer"><div class="wrap">
   <p>Scaler AIML · Class 16 — Personal Agents &amp; Multi-Agent Systems: Your Own Agent, and a Second Opinion · Groundwire Edition</p>
-  <p style="margin-top:8px">OpenClaw (install, <code class="k">onboard</code>, <code class="k">doctor</code>, <code class="k">dashboard</code>, <code class="k">agents add</code>, workspace paths) · Gemini Gems · Gemini API free tier · n8n webhook — all verified against current documentation, August 2026 · <b>OpenClaw ships very fast and Gemini's free-tier limits have moved repeatedly; re-verify commands, wizard wording, and quotas before you teach this live.</b></p>
+  <p style="margin-top:8px">OpenClaw (install, <code class="k">onboard</code>, <code class="k">doctor</code>, <code class="k">dashboard</code>, <code class="k">agents add</code>, workspace paths) · <code class="k">plugins install @openclaw/groq-provider</code> · Gemini Gems · Groq free tier · n8n webhook — all verified against current documentation, August 2026 · <b>OpenClaw ships very fast and every provider's free-tier limits move repeatedly; re-verify commands, wizard wording, and quotas before you teach this live.</b></p>
 </div></div>
 
 <script>
